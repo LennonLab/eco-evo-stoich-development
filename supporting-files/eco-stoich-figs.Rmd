@@ -1,0 +1,1176 @@
+---
+title: "Publication tables and figures"
+author: "Larsen ML, SW Wilhelm, JT Lennon (2015)"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+header-includes:
+   - \usepackage{array}
+output: pdf_document
+fontsize: 11pt
+geometry: margin = 0.75in
+---
+```{r}
+# Setup environment
+#rm(list=ls())
+
+setwd("C:/Users/meglarse/GitHub/larsen-dissertation/chpt1_NutrStoich/supporting-files/")
+
+#setwd("C:/Users/Megan/GitHub/larsen-dissertation/chpt1_NutrStoich/supporting-files/")
+
+# Load dependancies
+require(plotrix);require(pander)
+source("../bin/network.plots.R")
+
+# Read in data for plot
+dat.perc <- read.csv("../output/20130125_percchange_2.csv",  header = T)
+avg <- read.csv("../output/cstat-means.csv", header = T)
+syn.bor <- read.csv("../output/syn-bor.csv", header = T)
+phage.bor <- read.csv("../output/phage-bor.csv", header = T)
+sync <- read.csv("../output/cstatabd-stats.csv", header = T)
+
+# Define functions for calculations
+sem <- function(x){
+  sd(x)/sqrt(length(x))
+}
+```
+
+**Figure 1:** Percent Change in Growth
+
+```{r, fig.width = 4, fig.height = 4, echo=FALSE}
+# Calculate means
+perc.means <- aggregate(dat.perc[,3],list(dat.perc$med.base, dat.perc$med.add), mean)
+perc.means$plot <- c(1,2,3,4)
+
+# Calculate SEM
+perc.sem <- aggregate(dat.perc[,3],list(dat.perc$med.base, dat.perc$med.add), sem)
+
+pdf(file = "./chpt-figs/fig-pub_perchange.pdf",width=5,height=5,pointsize = 12, family ="sans")
+
+
+#png(filename = "./pub-figures/fig1-perchange.png",
+#    width = 570, height = 570, units = "px", pointsize = 17,
+#    bg = "white", family = "sans", type = "cairo")
+par(mar = c(5,5,2,1) + 0.1, mfrow = c(1,1))
+perc.plot<- plot(perc.means[,3] ~ perc.means[,4], 
+     xaxt = 'n', las = 1,
+     xlim = c(0.5,4.5),ylim = c(0,100),
+     xlab = list("N-limited              P-limited", cex = 1.5, font = 2) , 
+     ylab = list("Change in Growth (%)", cex = 1.5, font = 2),
+     pch = c(21,21,22,22),col = "black", bg = c("black","white","black","white"), 
+     cex = 2, lwd = 2, cex.axis = 1.25)
+arrows(perc.means[,4],perc.means[,3]-perc.sem[,3],
+       perc.means[,4],perc.means[,3]+perc.sem[,3],
+       code = 0, lwd = 3, col = "black")
+points(perc.means[,3] ~ perc.means[,4],
+       pch = c(21,21,22,22),cex = 3, lwd = 3,
+       col = "black", bg = c("black","white","black","white"))
+box(lwd=3)
+#axis.break(1, 2.5, style = "gap")
+abline(v = 2.5, lwd = 1, lty = 1, col = "black")
+axis(1, at = c(1,2,3,4), labels = c("+N","+P","+N","+P"), cex.axis = 1.25)
+#text(1.5,10,"N-limited", cex = 1.25, font = 2)
+#text(1.5,3,"N:P = 10:1", cex = 1.15, font = 1)
+#text(3.5,10,"P-limited", cex = 1.25, font = 2)
+#text(3.5,3,"N:P = 40:1", cex = 1.15, font = 1)
+
+
+dev.off()
+```
+
+**Figure 2:** Average population dynamics
+
+```{r avgpops-v1-pdf,results = 'hide', fig.height=3.75, fig.width=8, echo=FALSE, fig.cap="Treatment Chemostats"}
+day.start <- -6
+day.end <- 170
+
+
+pdf(file = "./chpt-figs/fig-pub_AvgPopDynamics.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
+
+
+par(mfrow = c(1,2))
+par(mar = c(4,6,3,0)+0.1)
+
+plot(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = expression(bold("Time (d)")), 
+        ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+      cex.lab = 1.5, font.lab = 2,cex.main = 1.5,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+       pch = 21, cex = 1)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^5,labels = "Acclimation", font = 2, cex = 1.15)
+    text(80,10^5,labels = "Phage addition", font = 2, cex = 1.15)
+  }
+    
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(5, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+#abline(v = 0, col = "grey", lty = 2, lwd = 2)
+box(lwd=3)
+  
+arrows(avg$day[avg$day >= day.start],
+       avg$NmeanSI[avg$day >= day.start]-avg$NseSI[avg$day >= day.start],
+       avg$day[avg$day >= day.start],
+       avg$NmeanSI[avg$day >= day.start]+avg$NseSI[avg$day >= day.start],
+       code=0,lwd=1.5)
+arrows(avg$day,avg$NmeanP-avg$NseP,avg$day,avg$NmeanP+avg$NseP,code=0,lwd=1.5)
+  
+points(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'o',lwd = 1.5,cex = 1, lty = 1)
+points(avg$day,avg$NmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'l',lwd = 1.5,cex = 1 , lty = 1)
+points(avg$day,avg$NmeanP,
+      pch = 22, col = "darkgrey",bg = "black",
+      type = 'p',lwd = 0.5,cex = 1 , lty = 1)
+
+text("a",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(4,4,3,2)+0.1)
+
+#PL
+plot(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = expression(bold("Time(d)")), ylab = NA,cex.lab = 1.5, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+       pch = 21, cex = 1, font.lab = 2)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^4,labels = "Acclimation", font = 2, cex = 1.2)
+    text(80,10^4,labels = "Phage addition", font = 2, cex = 1.2)
+  }
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(4, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+box(lwd=3)
+  
+arrows(avg$day[avg$day >= day.start],
+       avg$PmeanSI[avg$day >= day.start]-avg$PseSI[avg$day >= day.start],
+       avg$day[avg$day >= day.start],
+       avg$PmeanSI[avg$day >= day.start]+avg$PseSI[avg$day >= day.start],code=0,lwd=1.5)
+arrows(avg$day,avg$PmeanP-avg$PseP,avg$day,avg$PmeanP+avg$PseP,code=0,lwd=1.5)
+
+points(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'o',lwd = 1.5,cex = 1, lty = 1)
+points(avg$day,avg$PmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'l',lwd = 1.5,cex = 1, lty = 1)
+points(avg$day,avg$PmeanP,
+      pch = 22, col = "darkgrey",bg = "black",
+      type = 'p',lwd = 0.5,cex = 1, lty = 1)
+
+text("b",cex=2.5,x=162,y=10^8.8)
+
+legend("bottomright", c("Phage","Synechococcus"),
+       pch = c(22,21), col = "black", 
+       pt.bg = c("black","white"),pt.cex = 1.25, pt.lwd = 2,
+     text.font = c(1,3),
+      bty = 'n', cex = 1, lwd = 1)
+
+
+
+dev.off()
+```
+
+
+```{r avgpops-v1-png,results = 'hide', fig.height=3.75, fig.width=8, echo=FALSE, fig.cap="Treatment Chemostats"}
+day.start <- -6
+day.end <- 170
+
+
+png(filename = "./pub-figures/fig2-AvgPopDynamics.png",
+    width = 1140, height = 570, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+
+par(mfrow = c(1,2))
+par(mar = c(4,6,3,0)+0.1)
+
+plot(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = expression(bold("Time (d)")), 
+        ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+      cex.lab = 1.5, font.lab = 2,cex.main = 1.5,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+       pch = 21, cex = 1)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^5,labels = "Acclimation", font = 2, cex = 1.15)
+    text(80,10^5,labels = "Phage addition", font = 2, cex = 1.15)
+  }
+    
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(5, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+#abline(v = 0, col = "grey", lty = 2, lwd = 2)
+box(lwd=3)
+  
+arrows(avg$day[avg$day >= day.start],
+       avg$NmeanSI[avg$day >= day.start]-avg$NseSI[avg$day >= day.start],
+       avg$day[avg$day >= day.start],
+       avg$NmeanSI[avg$day >= day.start]+avg$NseSI[avg$day >= day.start],
+       code=0,lwd=2)
+arrows(avg$day,avg$NmeanP-avg$NseP,avg$day,avg$NmeanP+avg$NseP,code=0,lwd=2)
+  
+points(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'o',lwd = 2,cex = 1.5, lty = 1)
+points(avg$day,avg$NmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'o',lwd = 2,cex = 1.5, lty = 1)
+
+text("a",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(4,4,3,2)+0.1)
+
+#PL
+plot(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = expression(bold("Time(d)")), ylab = NA,cex.lab = 1.5, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+       pch = 21, cex = 1, font.lab = 2)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^4,labels = "Acclimation", font = 2, cex = 1.2)
+    text(80,10^4,labels = "Phage addition", font = 2, cex = 1.2)
+  }
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(4, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+box(lwd=3)
+  
+arrows(avg$day[avg$day >= day.start],
+       avg$PmeanSI[avg$day >= day.start]-avg$PseSI[avg$day >= day.start],
+       avg$day[avg$day >= day.start],
+       avg$PmeanSI[avg$day >= day.start]+avg$PseSI[avg$day >= day.start],code=0,lwd=2)
+arrows(avg$day,avg$PmeanP-avg$PseP,avg$day,avg$PmeanP+avg$PseP,code=0,lwd=2)
+
+points(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'o',lwd = 2,cex = 1.5, lty = 1)
+points(avg$day,avg$PmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'o',lwd = 2,cex = 1.5, lty = 1)
+
+text("b",cex=2.5,x=162,y=10^8.8)
+
+legend("bottomright", c("Phage","Synechococcus"),
+       pch = c(22,21), col = "black", 
+       pt.bg = c("black","white"),pt.cex = 1.25, pt.lwd = 2,
+     text.font = c(1,3),
+      bty = 'n', cex = 1.25, lwd = 1)
+
+
+
+dev.off()
+```
+
+
+**Figure 3 without time series**
+```{r coevo-pdf,echo=FALSE,fig.height=5,fig.width=8,results='hide'}
+Ncon <- read.csv("../output/20150710-infmatrixNcontrols.csv", header = F)
+Ncon[1,1] <- 999
+Ncon[,1] <- as.numeric(as.character(Ncon[,1]))
+Ncon <- as.matrix(Ncon)
+
+Ntrt <- read.csv("../output/20150710-infmatrixNcoevo.csv", header = F)
+Ntrt[1,1] <- 999
+Ntrt[,1] <- as.numeric(as.character(Ntrt[,1]))
+Ntrt <- as.matrix(Ntrt)
+
+Pcon <- read.csv("../output/20150710-infmatrixPcontrols.csv", header = F)
+Pcon[1,1] <- 999
+Pcon[,1] <- as.numeric(as.character(Pcon[,1]))
+Pcon <- as.matrix(Pcon)
+
+Ptrt <- read.csv("../output/20150710-infmatrixPcoevo.csv", header = F)
+Ptrt[1,1] <- 999
+Ptrt[,1] <- as.numeric(as.character(Ptrt[,1]))
+Ptrt <- as.matrix(Ptrt)
+
+#Ncon;Ntrt
+#Pcon;Ptrt
+
+#Add column to Ncon for 166; data does not exist for this time point
+V8 <- c(166,NA,NA,NA,NA,NA)
+Ncon <- cbind(Ncon,V8)
+
+
+# save timings
+phage.time <- as.numeric(c(Ncon[2:nrow(Ncon),1]))
+#phage.time <- as.numeric(c(Ncon[2:nrow(Ncon),1],Ntrt[2:nrow(Ntrt),1]))
+bacteria.time <- as.numeric(c(Ncon[1,2:ncol(Ncon)],Ntrt[1,2:ncol(Ntrt)]))
+
+#Trim data to remove column and row labels
+Ncon <- Ncon[2:dim(Ncon)[[1]], 2:(dim(Ncon))[[2]]]
+Pcon <- Pcon[2:dim(Pcon)[[1]], 2:(dim(Pcon))[[2]]]
+Ntrt <- Ntrt[2:dim(Ntrt)[[1]], 2:(dim(Ntrt))[[2]]]
+Ptrt <- Ptrt[2:dim(Ptrt)[[1]], 2:(dim(Ptrt))[[2]]]
+
+
+```
+
+```{r}
+pdf(file = "./chpt-figs/fig-pub_CoEvoDynamics.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
+
+par(mfrow = c(1,2))
+par(mar = c(4,6,3,1)+0.1)
+
+#Option 2
+# construct and populate adjacency matrix
+size <- 1*dim(Ncon)[[1]]+2*dim(Ntrt)[[2]]
+mat <- matrix(0,nrow = size,ncol = size)
+#mat
+
+# for multiple bacteria, single phage 
+mat[1:dim(Ncon)[[1]],I(dim(Ncon)[[1]]+1):I(dim(Ncon)[[1]]+dim(Ncon)[[2]])] <-as.matrix(Ntrt)
+mat[1:dim(Ncon)[[1]],I(dim(Ncon)[[1]]+dim(Ncon)[[2]]+1):dim(mat)[[2]]] <- as.matrix(Ncon)
+
+# convert adjacency matrix into graph object
+g2 <- graph.adjacency(mat,mode="directed",weighted=T)
+
+# extract weights
+#wts <- g2[[9]][[4]]$weight
+wts <- E(g2)$weight
+
+# create layout matrix
+locs <- cbind(c(phage.time,bacteria.time),c(rep(0,length(phage.time)),rep(-1,length(bacteria.time)/2),rep(1,length(bacteria.time)/2)))
+
+#plot options
+phage.color = "black"; bac.color = "white"; bac.color2 = "grey"
+#coevo.shape = "circle"; control.shape = "square"
+
+
+# create plot
+plot(g2,
+     #vertex.size = sq.dim,
+     #vertex.label.color = "black",
+     vertex.label = NA,
+     vertex.shape = c(rep("square",length(phage.time)),
+                      rep("circle",length(bacteria.time)/2),
+                      rep("circle",length(bacteria.time)/2)),
+     vertex.color = c(rep(phage.color,length(phage.time)),
+                      rep(bac.color,length(bacteria.time)/2),
+                      rep(bac.color2,length(bacteria.time)/2)),
+     vertex.frame.color = c(rep("grey50",length(phage.time)),
+                      rep("grey50",length(bacteria.time)/2),
+                      rep("grey50",length(bacteria.time)/2)),
+     edge.color = "grey20",edge.width = 3*wts,
+     edge.arrow.mode = 0,layout = locs,
+     xlab = list("Time (d)", cex = 1.25, font = 2),asp = 0, ylim = c(-1.2,1))
+
+# draw scaled axes
+xs <- c(0,40,80, 120, 160)
+scaled.xs <- 2*(xs - min(locs[,1]))/(max(locs[,1]) - min(locs[,1])) - 1
+
+axis(1,at = scaled.xs,labels = xs, cex = 1.15)
+axis(2, at = c(-1,0,1),labels = c("+Ph","phage","-Ph"),cex.axis = 1,font = 3, las = 1)
+
+box(lwd = 2)
+
+
+### PL treatment
+#Pcon
+#Ptrt
+
+#Option 1
+#Merge data from each matrix
+#data.in <- rbind(Pcon, Ptrt)
+#data.in <- as.matrix(data.in)
+
+#generate a square adjacency matrix, creating a place to store the data
+#mat <- matrix(0,nrow=sum(dim(data.in)),ncol=sum(dim(data.in)))
+  
+#nrows <- dim(data.in)[[1]]
+#big.nrows <- dim(mat)[[2]]
+  
+# create the phage-bacteria edges between time points
+#mat[1:nrows,I(nrows+1):big.nrows] <- data.in
+
+# convert adjacency matrix into graph object
+#g <- graph.adjacency(mat,mode = "directed",weighted = T)
+
+# extract weights
+#wts <- g2[[9]][[4]]$weight
+#wts <- E(g)$weight
+
+#Option 2
+# construct and populate adjacency matrix
+size <- 1*dim(Pcon)[[1]] + 2*dim(Ptrt)[[2]]
+mat <- matrix(0, nrow = size, ncol = size)
+mat
+
+# for multiple bacteria, single phage 
+mat[1:dim(Pcon)[[1]],I(dim(Pcon)[[1]]+1):I(dim(Pcon)[[1]] + dim(Pcon)[[2]])] <- as.matrix(Ptrt)
+mat[1:dim(Pcon)[[1]],I(dim(Pcon)[[1]]+dim(Pcon)[[2]]+1):dim(mat)[[2]]] <- as.matrix(Pcon)
+
+# convert adjacency matrix into graph object
+g2 <- graph.adjacency(mat,mode="directed",weighted=T)
+
+# extract weights
+#wts <- g2[[9]][[4]]$weight
+wts <- E(g2)$weight
+
+# create layout matrix
+locs <- cbind(c(phage.time,bacteria.time),c(rep(0,length(phage.time)),rep(-1,length(bacteria.time)/2),rep(1,length(bacteria.time)/2)))
+
+#plot options
+phage.color = "black"; bac.color = "white"; bac.color2 = "grey"
+coevo.shape = "circle"; control.shape = "square"
+
+# create plot
+plot(g2,
+     #vertex.size = sq.dim,
+     #vertex.label.color = "black",
+     vertex.label = NA,
+     vertex.shape = c(rep("square",length(phage.time)),
+                      rep("circle",length(bacteria.time)/2),
+                      rep("circle",length(bacteria.time)/2)),
+     vertex.color = c(rep(phage.color,length(phage.time)),
+                      rep(bac.color,length(bacteria.time)/2),
+                      rep(bac.color2,length(bacteria.time)/2)),
+     vertex.frame.color = c(rep("grey50",length(phage.time)),
+                      rep("grey50",length(bacteria.time)/2),
+                      rep("grey50",length(bacteria.time)/2)),
+     edge.color = "grey20",edge.width = 3*wts,
+     edge.arrow.mode = 0,layout = locs,
+     xlab = list("Time (d)", cex = 1.25, font = 2),
+     asp = 0,ylim = c(-1.2,1))
+
+# draw scaled axes
+xs <- c(0,40,80, 120, 160)
+scaled.xs <- 2*(xs - min(locs[,1]))/(max(locs[,1]) - min(locs[,1])) - 1
+
+axis(1,at = scaled.xs,labels = xs, cex = 1)
+axis(2, at = c(-1,0,1),labels = c("+Ph","phage","-Ph"),cex.axis = 1,font = 3, las = 1)
+
+box(lwd = 2)
+
+dev.off()
+```
+
+
+```{r,echo=FALSE,fig.height=5,fig.width=8,results='hide'}
+png(filename = "./pub-figures/fig3-InfDynamics.png",
+    width = 1140, height = 500, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+par(mfrow = c(1,2), mar = c(5,6,3,1)+0.1)
+inf.network(type = "treatment", cid = "N", phage.color="black", bac.color="black")
+box(lwd=3)
+par(mar = c(5,4,3,2)+0.1)
+inf.network(type = "treatment", cid = "P", phage.color="black", bac.color="black")
+box(lwd=3)
+dev.off()
+```
+
+**Table 1**
+
+```{r,echo=FALSE,pander}
+titles <- c("Limitation","Connectance", "Nestedness (NODF)", "Modularity (Qb)")
+lim <- c("N-limited","N-limited","N-limited","P-limited","P-limited","P-limited")
+con <- c(0.257,0.1935,0.210,.220,.168,.144)
+nodf <- c(0.3310,.3742,.2422,.3871,.2664,.2243)
+qb <- c(.1622, .1965, .1684, .2164,.2761,.2788)
+
+t1 <- t.test(con[1:3],con[4:6],conf.int = 0.95, alternative = "two.sided")
+t2 <- t.test(nodf[1:3],nodf[4:6],conf.int = 0.95, alternative = "two.sided")
+t3 <- t.test(qb[1:3],qb[4:6],conf.int = 0.95, alternative = "two.sided")
+  
+table1 <- data.frame(lim,con,nodf,qb)
+colnames(table1) <- titles
+
+means <- aggregate(table1[,2:4], list(table1$Limitation), mean)
+sds <- aggregate(table1[,2:4], list(table1$Limitation), sd)
+
+
+m1 <- merge(means,sds,by = "Group.1",all = TRUE)
+
+con2 <- paste(round(m1[,2], digits = 3),"\U00b1",round(m1[,5], digits = 3), sep=" ")
+nest <- paste(round(m1[,3], digits = 3),"\U00b1",round(m1[,6], digits = 3), sep=" ")
+mod <- paste(round(m1[,4], digits = 3)
+,"\U00b1",round(m1[,7], digits = 3), sep=" ")
+pval <- c(0,round(t1$p.value,digits = 3),round(t2$p.value,digits = 3),round(t3$p.value,digits = 3))
+
+lim2 <-c("N-limited","P-limited","p-value")
+table2 <- data.frame(c("N-limited","P-limited"),con2,nest, mod)
+colnames(table2) <- titles
+table2 <- t(table2)
+
+table3 <- matrix(NA,nrow=4,ncol=3)
+table3[,1] <- table2[,1]
+table3[,2] <- table2[,2]
+table3[,3] <- pval
+table3 <- table3[-1,]
+colnames(table3) <- lim2
+rownames(table3) <- rownames(table2)[2:4]
+
+pander(table3)
+```
+
+**Figure S1** control population dynamics
+
+```{r avgpops-ctrl-pdf}
+
+pdf(file = "./chpt-figs/fig-pub_AvgPopDynamics-ctrl.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
+
+
+par(mar = c(5,6,2,0)+0.1, mfrow = c(1,2))
+
+
+plot(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+     cex.lab = 1.5, font.lab = 2, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "grey", 
+       pch = 21, cex = 1)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=3)
+  
+  arrows(avg$day[avg$day >= day.start],
+         avg$NmeanC[avg$day >= day.start]-avg$NseC[avg$day >= day.start],
+         avg$day[avg$day >= day.start],
+         avg$NmeanC[avg$day >= day.start]+avg$NseC[avg$day >= day.start],code=0,lwd=1.5)
+  points(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+         pch = 21, col = "black",bg = "grey",
+         type = 'o',lwd = 1.5,cex = 1, lty = 1)
+text("a",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(5,4,2,2)+0.1)
+plot(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = NA, cex.main = 1.5, cex.lab = 1.5, 
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "grey", 
+       pch = 21, cex = 1, font.lab = 2)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=3)
+  
+  arrows(avg$day[avg$day >= day.start],
+         avg$PmeanC[avg$day >= day.start]-avg$PseC[avg$day >= day.start],
+         avg$day[avg$day >= day.start],
+         avg$PmeanC[avg$day >= day.start]+avg$PseC[avg$day >= day.start],code=0,lwd=1.5)
+  points(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+         pch = 21, col = "black",bg = "grey",
+         type = 'o',lwd = 1.5,cex = 1, lty = 1)
+  text("b",cex=2.5,x=162,y=10^8.8)
+
+#legend("bottomright", c("Phage","Synechococcus"),
+#       pch = c(21,21), col = "black", 
+#       pt.bg = c("black","white"),pt.cex = 1.25, pt.lwd = 2,
+#     text.font = c(1,3),
+ #      bty = 'n', cex = 1.25, lwd = 1)
+
+  
+dev.off()
+```
+
+```{r avgpops-ctrl-png}
+
+png(filename = "./pub-figures/FigS1-AvgPopsctrl.png",
+    width = 1140, height = 500, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+
+par(mar = c(5,6,2,0)+0.1, mfrow = c(1,2))
+
+
+plot(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+     cex.lab = 1.5, font.lab = 2, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "grey", 
+       pch = 21, cex = 1)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=3)
+  
+  arrows(avg$day[avg$day >= day.start],
+         avg$NmeanC[avg$day >= day.start]-avg$NseC[avg$day >= day.start],
+         avg$day[avg$day >= day.start],
+         avg$NmeanC[avg$day >= day.start]+avg$NseC[avg$day >= day.start],code=0,lwd=2)
+  points(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+         pch = 21, col = "black",bg = "grey",
+         type = 'o',lwd = 2,cex = 1.5, lty = 1)
+text("a",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(5,4,2,2)+0.1)
+plot(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = NA, cex.main = 1.5, cex.lab = 1.5, 
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "grey", 
+       pch = 22, cex = 1, font.lab = 2)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=3)
+  
+  arrows(avg$day[avg$day >= day.start],
+         avg$PmeanC[avg$day >= day.start]-avg$PseC[avg$day >= day.start],
+         avg$day[avg$day >= day.start],
+         avg$PmeanC[avg$day >= day.start]+avg$PseC[avg$day >= day.start],code=0,lwd=2)
+  points(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+         pch = 21, col = "black",bg = "grey",
+         type = 'o',lwd = 2,cex = 1.5, lty = 1)
+  text("b",cex=2.5,x=162,y=10^8.8)
+
+#legend("bottomright", c("Phage","Synechococcus"),
+#       pch = c(21,21), col = "black", 
+#       pt.bg = c("black","white"),pt.cex = 1.25, pt.lwd = 2,
+#     text.font = c(1,3),
+ #      bty = 'n', cex = 1.25, lwd = 1)
+
+  
+dev.off()
+```
+
+
+**Figure S2** CCF
+
+```{r}
+sync <- subset(sync, sync$day < 156)
+sync <- na.omit(sync)
+
+#subset data into NL and PL data sets
+syncN <- subset(sync, sync$lim == "N")
+syncP <- subset(sync, sync$lim == "P")
+
+png(filename = "./figures/figS2-CCF.png",
+    width = 1140, height = 570, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+par(mfrow = c(1,2))
+par(mar = c(5,6,3,0)+0.1)
+ccfN <- ccf(syncN$Syn, syncN$Phage, lag.max = 8, type = "correlation", 
+    ylab = "CCF", main = "N-limited",
+    plot = T, ylim = c(-0.5,0.5), las = 1,
+    cex.main = 1.5, cex.axis = 1.15, cex.lab = 1.5, font.lab = 2)
+box(lwd = 3)
+print(ccfN)
+
+par(mar = c(5,4,3,2)+0.1)
+ccfP <- ccf(syncP$Syn, syncP$Phage, lag.max = 8, type = "correlation", 
+    ylab = NA, main = "P-limited",
+    plot = T, ylim = c(-0.5,0.5), las = 1,
+    cex.main = 1.5, cex.axis = 1.15, cex.lab = 1.5, font.lab = 2)
+box(lwd = 3)
+print(ccfP)
+
+dev.off()
+
+```
+
+**Figure S3** global infectivity and resistance
+```{r}
+png(filename = "./figures/figS3-Res+HR.png",
+    width = 1140, height = 570, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+
+day.start = -6
+
+bn <- syn.bor[syn.bor$B.trt == "N",]
+bp <- syn.bor[syn.bor$B.trt == "P",]
+
+bor.tsmeansN <- aggregate(bn[,103:105],bn["B.daynumber"],function(x) mean(x))
+bor.tsmeansP <- aggregate(bp[,103:105],bp["B.daynumber"],function(x) mean(x))
+bor.tsSEMN <- aggregate(bn[,103:105],bn["B.daynumber"],sem)
+bor.tsSEMP <- aggregate(bp[,103:105],bp["B.daynumber"],sem)
+
+par(mfrow = c(1,2), mar = c(5,6,3,1)+0.1)
+
+# NL Syn
+plot(global ~ B.daynumber, data = bor.tsmeansN, 
+     xlim = c(-10,170),ylim = c(0,1), 
+     xaxt = 'n', yaxt = 'n',
+     xlab = "Time (d)",ylab = "Resistance", 
+     type = "n", font.lab = 2,
+     cex = 2, cex.lab = 1.5)
+axis(1, c(0,40,80,120,160),cex.axis = 1.25, font = 1)
+axis(2, c(0,0.5,1), cex.axis = 1.25, font = 1, las = 1)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,-0.5,0,1.5, col = "grey94")
+  }
+
+box(lwd=3)
+arrows(bor.tsmeansN$B.daynumber, bor.tsmeansN$global-bor.tsSEMN$global,
+       bor.tsmeansN$B.daynumber, bor.tsmeansN$global+bor.tsSEMN$global,
+       code = 0, lwd = 3)
+arrows(bor.tsmeansP$B.daynumber, bor.tsmeansP$global-bor.tsSEMP$global,
+       bor.tsmeansP$B.daynumber, bor.tsmeansP$global+bor.tsSEMP$global,
+       code = 0, lwd = 3)
+
+points(global ~ B.daynumber, data = bor.tsmeansN, 
+     type = "p", pch = 21, 
+     col = "black", bg = "white",
+     lty = 1, lwd = 2, cex = 3)
+points(global ~ B.daynumber, data = bor.tsmeansP, 
+     type = "p", pch = 22, 
+     col = "black", bg = "white",
+     lty = 1, lwd = 2, cex = 3)
+
+
+#Phage
+
+bn <- phage.bor[phage.bor$P.trt == "N",]
+bp <- phage.bor[phage.bor$P.trt == "P",]
+
+bor.tsmeansN <- aggregate(bn[,123:125],bn["P.daynumber"],function(x) mean(x))
+bor.tsmeansP <- aggregate(bp[,123:125],bp["P.daynumber"],function(x) mean(x))
+bor.tsSEMN <- aggregate(bn[,123:125],bn["P.daynumber"],sem)
+bor.tsSEMP <- aggregate(bp[,123:125],bp["P.daynumber"],sem)
+
+par(mar = c(5,6,3,1)+0.1)
+
+plot(global ~ P.daynumber, data = bor.tsmeansN, 
+     xlim = c(-10,170),ylim = c(0,.5), 
+     xaxt = 'n', yaxt = 'n',
+     xlab = "Time (d)",ylab = "Infectivity", 
+     type = "n", font.lab = 2,
+     cex = 2, cex.lab = 1.5)
+axis(1, c(0,40,80,120,160),cex.axis = 1.25, font = 1)
+axis(2, c(0,0.25,0.5), cex.axis = 1.25, font = 1, las = 1)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,-0.5,0,.75, col = "grey94")
+  }
+
+box(lwd=3)
+
+arrows(bor.tsmeansN$P.daynumber, bor.tsmeansN$global-bor.tsSEMN$global,
+       bor.tsmeansN$P.daynumber, bor.tsmeansN$global+bor.tsSEMN$global,
+       code = 0, lwd = 3)
+arrows(bor.tsmeansP$P.daynumber, bor.tsmeansP$global-bor.tsSEMP$global,
+       bor.tsmeansP$P.daynumber, bor.tsmeansP$global+bor.tsSEMP$global,
+       code = 0, lwd = 3)
+
+points(global ~ P.daynumber, data = bor.tsmeansN, 
+     type = "p", pch = 21, 
+     col = "black", bg = "white",
+     lty = 1, lwd = 2, cex = 3)
+points(global ~ P.daynumber, data = bor.tsmeansP, 
+     type = "p", pch = 22, 
+     col = "black", bg = "white",
+     lty = 1, lwd = 2, cex = 3)
+
+legend("topright",c("N-limited", "P-limited"), pch = c(21,22), 
+       col = "black", bty='n', cex =1.5)
+
+dev.off()
+```
+
+**Table S1** media Recipe
+**Table S2** TS topology
+
+**Figure:** Average population dynamics with isolates
+
+```{r avgpops-isos-pdf,results = 'hide', fig.height=8, fig.width=8, echo=FALSE, fig.cap="Treatment Chemostats"}
+day.start <- -6
+day.end <- 170
+
+pdf(file = "./chpt-figs/fig_AvgPopDynamics-isos.pdf",width=6,height=6,pointsize = 10, family ="sans")
+
+isos = c(-6,9,23,72,129,148,166)
+isos = avg[(avg$day %in% isos),]
+
+par(mfrow = c(2,2))
+par(mar = c(4,6,3,0)+0.1)
+
+plot(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = NA, 
+        ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+      cex.lab = 1.5, font.lab = 2,cex.main = 1.5,
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "white", 
+       pch = 21, cex = 1)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^5,labels = "Acclimation", font = 2, cex = 1.15)
+    text(80,10^5,labels = "Phage addition", font = 2, cex = 1.15)
+  }
+    
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(5, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+#abline(v = 0, col = "grey", lty = 2, lwd = 2)
+box(lwd=2)
+  
+
+points(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+points(avg$day,avg$NmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+points(isos$day[isos$day >= day.start],isos$NmeanSI[isos$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+points(isos$day,isos$NmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+
+text("a",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(4,4,3,2)+0.1)
+
+#PL
+plot(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = NA, ylab = NA,cex.lab = 1.5, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "white", 
+       pch = 21, cex = 1, font.lab = 2)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^4,labels = "Acclimation", font = 2, cex = 1.2)
+    text(80,10^4,labels = "Phage addition", font = 2, cex = 1.2)
+  }
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(4, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+box(lwd=2)
+  
+
+points(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+points(avg$day,avg$PmeanP,
+      pch = 21, col = "black",bg = "black",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+
+points(isos$day[isos$day >= day.start],isos$PmeanSI[isos$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+points(isos$day,isos$PmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+
+text("b",cex=2.5,x=162,y=10^8.8)
+
+
+par(mar = c(5,6,2,0)+0.1)
+
+
+plot(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+     cex.lab = 1.5, font.lab = 2, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "grey", 
+       pch = 22, cex = 1)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=2)
+
+  points(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+         pch = 22, col = "black",bg = "grey",
+         type = 'l',lwd = 2,cex = 1.5, lty = 1)
+  points(isos$day[isos$day >= day.start],isos$NmeanC[isos$day >= day.start],
+      pch = 21, col = "black",bg = "grey",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+
+  
+text("c",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(5,4,2,2)+0.1)
+plot(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = NA, cex.main = 1.5, cex.lab = 1.5, 
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "grey", 
+       pch = 22, cex = 1, font.lab = 2)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=2)
+  
+  points(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+         pch = 22, col = "black",bg = "grey",
+         type = 'l',lwd = 2,cex = 1.5, lty = 1)
+  
+    points(isos$day[isos$day >= day.start],isos$PmeanC[isos$day >= day.start],
+      pch = 21, col = "black",bg = "grey",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+  
+  text("d",cex=2.5,x=162,y=10^8.8)
+
+legend("bottomright", c("Phage","Coevolved host","Niave host"),
+       pch = c(22,21,21), col = "black", 
+       pt.bg = c("black","white","grey"),pt.cex = 1, pt.lwd = 2,
+     text.font = 1,
+      bty = 'n', cex = 1, lwd = 1)
+
+  
+dev.off()
+```
+
+
+```{r avgpops-isos-png,results = 'hide', fig.height=8, fig.width=8, echo=FALSE, fig.cap="Treatment Chemostats"}
+day.start <- -6
+day.end <- 170
+
+png(filename = "./figures/AvgPopDynamics-isostrt.png",
+    width = 1140, height = 570, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+isos = c(-6,9,23,72,129,148,166)
+isos = avg[(avg$day %in% isos),]
+
+#pdf(file = "./figures/AvgPopDynamics-isos.pdf", width = 8, height = 8, pointsize = 15)
+
+par(mfrow = c(1,2))
+par(mar = c(4,6,3,0)+0.1)
+
+plot(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = NA, 
+        ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+      cex.lab = 1.5, font.lab = 2,cex.main = 1.5,
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "white", 
+       pch = 21, cex = 1)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^5,labels = "Acclimation", font = 2, cex = 1.15)
+    text(80,10^5,labels = "Phage addition", font = 2, cex = 1.15)
+  }
+    
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(5, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+#abline(v = 0, col = "grey", lty = 2, lwd = 2)
+box(lwd=3)
+  
+
+points(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+points(avg$day,avg$NmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+points(isos$day[isos$day >= day.start],isos$NmeanSI[isos$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+points(isos$day,isos$NmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+
+text("a",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(4,4,3,2)+0.1)
+
+#PL
+plot(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = NA, ylab = NA,cex.lab = 1.5, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "white", 
+       pch = 21, cex = 1, font.lab = 2)
+
+if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+if(day.start > -6){
+    text(-60,10^4,labels = "Acclimation", font = 2, cex = 1.2)
+    text(80,10^4,labels = "Phage addition", font = 2, cex = 1.2)
+  }
+
+axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+ticks <- seq(4, 9, by=1)
+labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+box(lwd=3)
+  
+
+points(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+points(avg$day,avg$PmeanP,
+      pch = 21, col = "black",bg = "black",
+      type = 'l',lwd = 2,cex = 1.5, lty = 1)
+
+points(isos$day[isos$day >= day.start],isos$PmeanSI[isos$day >= day.start],
+      pch = 21, col = "black",bg = "white",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+points(isos$day,isos$PmeanP,
+      pch = 22, col = "black",bg = "black",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+
+text("b",cex=2.5,x=162,y=10^8.8)
+
+dev.off()
+
+
+png(filename = "./figures/AvgPopDynamics-isoctl.png",
+    width = 1140, height = 570, units = "px", pointsize = 17,
+    bg = "white", family = "sans", type = "cairo")
+
+isos = c(-6,9,23,72,129,148,166)
+isos = avg[(avg$day %in% isos),]
+
+par(mar = c(5,6,2,0)+0.1, mfrow = c(1,2))
+
+
+plot(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+     cex.lab = 1.5, font.lab = 2, cex.main = 1.5,
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "grey", 
+       pch = 22, cex = 1)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=3)
+
+  points(avg$day[avg$day >= day.start],avg$NmeanC[avg$day >= day.start],
+         pch = 22, col = "black",bg = "grey",
+         type = 'l',lwd = 2,cex = 1.5, lty = 1)
+  points(isos$day[isos$day >= day.start],isos$NmeanC[isos$day >= day.start],
+      pch = 21, col = "black",bg = "grey",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+
+  
+text("c",cex=2.5,x=162,y=10^8.8)
+
+par(mar = c(5,4,2,2)+0.1)
+plot(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = NA, cex.main = 1.5, cex.lab = 1.5, 
+       lty = 1, lwd = 2, type = "l", col = "black", bg = "grey", 
+       pch = 22, cex = 1, font.lab = 2)
+  
+  axis(1, cex.axis = 1.15,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.15, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+  if(day.start <= 0){
+    abline(v = 0, lwd = 2, lty = 1, col = "black")
+    rect(day.start-12,1*10^3,0,10^10, col = "grey94")
+  }
+
+  box(lwd=3)
+  
+  points(avg$day[avg$day >= day.start],avg$PmeanC[avg$day >= day.start],
+         pch = 22, col = "black",bg = "grey",
+         type = 'l',lwd = 2,cex = 1.5, lty = 1)
+  
+    points(isos$day[isos$day >= day.start],isos$PmeanC[isos$day >= day.start],
+      pch = 21, col = "black",bg = "grey",
+      type = 'p',lwd = 2,cex = 1.5, lty = 1)
+  
+  text("d",cex=2.5,x=162,y=10^8.8)
+
+legend("bottomright", c("Phage","Coevolved host","Niave host"),
+       pch = c(22,21,21), col = "black", 
+       pt.bg = c("black","white","grey"),pt.cex = 1.25, pt.lwd = 2,
+     text.font = 1,
+      bty = 'n', cex = 1.25, lwd = 1)
+
+  
+dev.off()
+```
