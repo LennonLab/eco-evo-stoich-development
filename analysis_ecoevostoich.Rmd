@@ -6,7 +6,7 @@ output:
     keep_tex: yes
     latex_engine: xelatex
     number_sections: yes
-geometry: margin=0.75in
+geometry: margin=1in
 ---
 
 ```{r setup, include = FALSE}
@@ -108,7 +108,7 @@ growth.modGomp("./data/NutrGR.csv","csv_test",synergy = F, temp = F, smooth = FA
 
 ```
 
-```{r gr-vis, fig.cap= "Nitrogen (N) and phosphorus (P) addition to the base N-limited and P-limited media used in the chemostat experiment. Culture controls (C) did not contain additional N or P."}
+```{r gr-vis, fig.cap= "Nitrogen (N), phosphorus (P), or NP addition to the base N-limited and P-limited media used in the chemostat experiment. Culture controls (C) did not contain additional N or P."}
 # read in data file
 dat <- read.csv("./data/NutrGR.csv", header = T)
 
@@ -191,7 +191,7 @@ pander(tukey.fitP$med.add[,1:4],table.split.table = inf)
 \newpage
 
 ## Percent Change in Growth 
-```{r perc.change}
+```{r perc.change, fig.cap="Percent change in growth rate between control and nutrient additions(N, P, or NP) cultures. NL = N-limited; PL = P-limited"}
 media <- c(); trt <- c()
 avgGR <- c(); stdGR <- c()
 delta <- c(); perc <- c()
@@ -251,7 +251,7 @@ results.ag <- aggregate(. ~ med.add + med.base, results,
                         function(x) c(mean = mean(x),sd = sd(x)))
 results.ag[,3:5] = round(results.ag[,3:5], digits = 3)
 set.caption("Resource Percent Change in Growth Aggregate Data")
-pander(results.ag, justify = "center",table.split.table = inf)
+#pander(results.ag[,c(1,2,9,10)], justify = "center",table.split.table = inf)
 
 #write.csv(results.ag, file = "./supporting-files/chpt-tables/table_perchange.csv",row.names = FALSE)
 
@@ -263,23 +263,20 @@ pander(results.ag, justify = "center",table.split.table = inf)
 **N-limited**
 
 ```{r perc.change-statsN}
-
+# Calulate statistics
 fitN = aov(perc.change ~ med.add, results[results$med.base == "NL",])
 sum.fitN = summary(fitN)
 tukey.fitN = TukeyHSD(fitN)
 
-xtable(tukey.fitN$med.add, digits = 3)
-
-#round(tukey.fit$med.add, digits = 3)
+# Make tables
 set.caption("ANOVA table for NL nutrient addition")
 pander(fitN,table.split.table = inf)
 
 set.caption("Posthoc comparisons using Tukey HSD")
-#emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
+emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
 pander(tukey.fitN$med.add,table.split.table = inf)
 #write.csv(file = "./supporting-files/data/NL-percGRstats.csv",tukey.fitN$med.add)
-#kable(tukey.fitN$med.add[,1:4], format = "latex", digits = 3, 
-#      caption = "ANOVA table for N-limited percent change treatments with Tukey post-hoc comparisons")
+
 
 ```
 
@@ -290,9 +287,7 @@ fitP = aov(perc.change ~ med.add, results[results$med.base == "PL",])
 sum.fitP = summary(fitP)
 tukey.fitP = TukeyHSD(fitP)
 
-xtable(tukey.fitN$med.add, digits = 3)
 
-#round(tukey.fit$med.add, digits = 3)
 set.caption("ANOVA table for PL nutrient addition")
 pander(fitP,table.split.table = inf)
 
@@ -300,8 +295,7 @@ set.caption("Posthoc comparisons using Tukey HSD")
 #emphasize.strong.rows(which(tukey.fitP$med.add[,4] < 0.05, arr.ind = TRUE))
 pander(tukey.fitP$med.add,table.split.table = inf)
 #write.csv(file = "./supporting-files/data/PL-percGRstats.csv",tukey.fitP$med.add)
-#kable(tukey.fitP$med.add[,1:4], format = "latex", digits = 3, 
-#      caption = "ANOVA table for P-limited percent change treatments with Tukey post-hoc comparisons")
+
 
 ```
 

@@ -22,7 +22,7 @@
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage[margin=0.75in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
@@ -108,9 +108,11 @@ S.W. Wilhelm, \emph{University of Tennessee - Knoxville, Knoxville TN}
   phage?
 \end{enumerate}
 
-\textbf{Data collection} Briefly, all data for this project was
-collected during a long term continuous culture experimental evolution
-study with \emph{Synechococcus} and SRIM-8 cyanomyophage.
+\textbf{Data collection}
+
+Briefly, all data for this project was collected during a long term
+continuous culture experimental evolution study with
+\emph{Synechococcus} and SRIM-8 cyanomyophage.
 
 For a complete description of the materials and methods for this
 repository, see Larsen \emph{et al.} 2016.
@@ -163,23 +165,19 @@ with the addtion of N or P to our stoichiometrically amended AN media
 response to nutrient
 addition}{Synechococcus growth rates with response to nutrient addition}}\label{synechococcus-growth-rates-with-response-to-nutrient-addition}
 
+\begin{figure}[htbp]
+\centering
 \includegraphics{analysis_ecoevostoich_files/figure-latex/gr-vis-1.pdf}
+\caption{Nitrogen (N), phosphorus (P), or NP addition to the base
+N-limited and P-limited media used in the chemostat experiment. Culture
+controls (C) did not contain additional N or P.}
+\end{figure}
 
 \newpage
 
 \subsubsection{Growth rate ANOVA tables}\label{growth-rate-anova-tables}
 
 \textbf{N-limited}
-
-\begin{verbatim}
-##        diff    lwr    upr p adj
-## N-C   0.093  0.057  0.129 0.000
-## NP-C  0.122  0.086  0.158 0.000
-## P-C   0.037  0.001  0.073 0.042
-## NP-N  0.029 -0.007  0.065 0.155
-## P-N  -0.056 -0.092 -0.020 0.001
-## P-NP -0.085 -0.121 -0.049 0.000
-\end{verbatim}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \caption{ANOVA table for NL nutrient addition}\tabularnewline
@@ -270,16 +268,16 @@ NA
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
 ~
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 diff
 \strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 lwr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 upr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 p adj
 \strut\end{minipage}\tabularnewline
 \midrule
@@ -288,16 +286,16 @@ p adj
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
 ~
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 diff
 \strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 lwr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 upr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 p adj
 \strut\end{minipage}\tabularnewline
 \midrule
@@ -305,117 +303,97 @@ p adj
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{N-C}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.0929
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0929}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.05677
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.05677}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.129
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.129}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-2.426e-07
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{2.426e-07}
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{NP-C}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.1218
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.1218}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.0857
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0857}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.158
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.158}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-4.542e-10
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{4.542e-10}
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{P-C}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.03716
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.03716}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.001027
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.001027}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.0733
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0733}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.04188
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.04188}
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{NP-N}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
 0.02893
 \strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
 -0.007204
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
 0.06507
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
 0.1551
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{P-N}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
--0.05574
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.05574}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
--0.09188
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.09188}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
--0.01961
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.01961}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.001056
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.001056}
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{P-NP}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
--0.08467
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.08467}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
--0.1208
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.1208}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
--0.04854
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.04854}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-1.564e-06
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{1.564e-06}
 \strut\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \textbf{P-limited}
-
-\begin{verbatim}
-## % latex table generated in R 3.2.5 by xtable 1.8-2 package
-## % Thu Jul 07 01:34:50 2016
-## \begin{table}[ht]
-## \centering
-## \begin{tabular}{rrrrr}
-##   \hline
-##  & diff & lwr & upr & p adj \\ 
-##   \hline
-## N-C & 0.025 & -0.031 & 0.082 & 0.619 \\ 
-##   NP-C & 0.042 & -0.015 & 0.098 & 0.209 \\ 
-##   P-C & 0.059 & 0.002 & 0.115 & 0.039 \\ 
-##   NP-N & 0.016 & -0.040 & 0.072 & 0.866 \\ 
-##   P-N & 0.033 & -0.023 & 0.089 & 0.401 \\ 
-##   P-NP & 0.017 & -0.039 & 0.073 & 0.850 \\ 
-##    \hline
-## \end{tabular}
-## \end{table}
-\end{verbatim}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \caption{ANOVA table for PL nutrient addition}\tabularnewline
@@ -635,12 +613,12 @@ p adj
 
 \subsection{Percent Change in Growth}\label{percent-change-in-growth}
 
+\begin{figure}[htbp]
+\centering
 \includegraphics{analysis_ecoevostoich_files/figure-latex/perc.change-1.pdf}
-Quitting from lines 204-267 (analysis\_ecoevostoich.Rmd) Error in
-\texttt{{[}\textless{}-.data.frame}(\texttt{*tmp*}, , j, value =
-c(``0.2'', ``0.229'', ``0.144'', : replacement has 12 rows, data has 6
-Calls: \ldots{} cat -\textgreater{} pandoc.table.return -\textgreater{}
-{[}\textless{}- -\textgreater{} {[}\textless{}-.data.frame
+\caption{Percent change in growth rate between control and nutrient
+additions(N, P, or NP) cultures. NL = N-limited; PL = P-limited}
+\end{figure}
 
 \newpage
 
@@ -648,23 +626,6 @@ Calls: \ldots{} cat -\textgreater{} pandoc.table.return -\textgreater{}
 tables}\label{growth-rate-anova-tables-1}
 
 \textbf{N-limited}
-
-\begin{verbatim}
-## % latex table generated in R 3.2.5 by xtable 1.8-2 package
-## % Thu Jul 07 01:34:51 2016
-## \begin{table}[ht]
-## \centering
-## \begin{tabular}{rrrrr}
-##   \hline
-##  & diff & lwr & upr & p adj \\ 
-##   \hline
-## NP-N & 27.061 & 0.040 & 54.083 & 0.050 \\ 
-##   P-N & -52.139 & -79.160 & -25.117 & 0.001 \\ 
-##   P-NP & -79.200 & -106.221 & -52.178 & 0.000 \\ 
-##    \hline
-## \end{tabular}
-## \end{table}
-\end{verbatim}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \caption{ANOVA table for NL nutrient addition}\tabularnewline
@@ -755,16 +716,16 @@ NA
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
 ~
 \strut\end{minipage} &
-\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+\begin{minipage}[b]{0.13\columnwidth}\centering\strut
 diff
 \strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
 lwr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+\begin{minipage}[b]{0.13\columnwidth}\centering\strut
 upr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 p adj
 \strut\end{minipage}\tabularnewline
 \midrule
@@ -773,16 +734,16 @@ p adj
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
 ~
 \strut\end{minipage} &
-\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+\begin{minipage}[b]{0.13\columnwidth}\centering\strut
 diff
 \strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
 lwr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+\begin{minipage}[b]{0.13\columnwidth}\centering\strut
 upr
 \strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
+\begin{minipage}[b]{0.16\columnwidth}\centering\strut
 p adj
 \strut\end{minipage}\tabularnewline
 \midrule
@@ -790,69 +751,52 @@ p adj
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{NP-N}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\centering\strut
-27.06
+\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{27.06}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-0.03951
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{0.03951}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\centering\strut
-54.08
+\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{54.08}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.04966
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.04966}
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{P-N}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\centering\strut
--52.14
+\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{-52.14}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
--79.16
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{-79.16}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\centering\strut
--25.12
+\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{-25.12}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-0.0006541
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0006541}
 \strut\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
 \textbf{P-NP}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\centering\strut
--79.2
+\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{-79.2}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
--106.2
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{-106.2}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\centering\strut
--52.18
+\begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{-52.18}
 \strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-1.316e-05
+\begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{1.316e-05}
 \strut\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \textbf{P-limited}
-
-\begin{verbatim}
-## % latex table generated in R 3.2.5 by xtable 1.8-2 package
-## % Thu Jul 07 01:34:51 2016
-## \begin{table}[ht]
-## \centering
-## \begin{tabular}{rrrrr}
-##   \hline
-##  & diff & lwr & upr & p adj \\ 
-##   \hline
-## NP-N & 27.061 & 0.040 & 54.083 & 0.050 \\ 
-##   P-N & -52.139 & -79.160 & -25.117 & 0.001 \\ 
-##   P-NP & -79.200 & -106.221 & -52.178 & 0.000 \\ 
-##    \hline
-## \end{tabular}
-## \end{table}
-\end{verbatim}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \caption{ANOVA table for PL nutrient addition}\tabularnewline
@@ -3207,9 +3151,9 @@ Pr(\textgreater{}F)\tabularnewline
 \bottomrule
 \end{longtable}
 
-\textbf{Limitation} 1 0.03804 0.03804 0.6411 0.003496 0.018
+\textbf{Limitation} 1 0.03804 0.03804 0.6411 0.003496 0.017
 
-**Time*Limitation** 1 0.07149 0.07149 1.205 0.006572 0.301
+**Time*Limitation** 1 0.07149 0.07149 1.205 0.006572 0.263
 
 \begin{verbatim}
 **Residuals**     110     6.527     0.05933     NA       0.6       NA   
