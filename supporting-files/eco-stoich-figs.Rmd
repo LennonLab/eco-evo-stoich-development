@@ -400,8 +400,9 @@ plot(g2,
      vertex.frame.color = c(rep("grey50",length(phage.time)),
                       rep("grey50",length(bacteria.time)/2),
                       rep("grey50",length(bacteria.time)/2)),
-     edge.color = "grey20",edge.width = 3*wts,
+     edge.color = "grey20",edge.width = 5*wts,
      edge.arrow.mode = 0,layout = locs,
+     main = "N-limited",
      xlab = list("Time (d)", cex = 1.25, font = 2),asp = 0, ylim = c(-1.2,1))
 
 # draw scaled axes
@@ -415,31 +416,7 @@ box(lwd = 2)
 
 
 ### PL treatment
-#Pcon
-#Ptrt
 
-#Option 1
-#Merge data from each matrix
-#data.in <- rbind(Pcon, Ptrt)
-#data.in <- as.matrix(data.in)
-
-#generate a square adjacency matrix, creating a place to store the data
-#mat <- matrix(0,nrow=sum(dim(data.in)),ncol=sum(dim(data.in)))
-  
-#nrows <- dim(data.in)[[1]]
-#big.nrows <- dim(mat)[[2]]
-  
-# create the phage-bacteria edges between time points
-#mat[1:nrows,I(nrows+1):big.nrows] <- data.in
-
-# convert adjacency matrix into graph object
-#g <- graph.adjacency(mat,mode = "directed",weighted = T)
-
-# extract weights
-#wts <- g2[[9]][[4]]$weight
-#wts <- E(g)$weight
-
-#Option 2
 # construct and populate adjacency matrix
 size <- 1*dim(Pcon)[[1]] + 2*dim(Ptrt)[[2]]
 mat <- matrix(0, nrow = size, ncol = size)
@@ -477,8 +454,9 @@ plot(g2,
      vertex.frame.color = c(rep("grey50",length(phage.time)),
                       rep("grey50",length(bacteria.time)/2),
                       rep("grey50",length(bacteria.time)/2)),
-     edge.color = "grey20",edge.width = 3*wts,
+     edge.color = "grey20",edge.width = 5*wts,
      edge.arrow.mode = 0,layout = locs,
+     main = "P-limited",
      xlab = list("Time (d)", cex = 1.25, font = 2),
      asp = 0,ylim = c(-1.2,1))
 
