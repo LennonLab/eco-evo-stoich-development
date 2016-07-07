@@ -12,9 +12,7 @@ geometry: margin = 0.75in
 # Setup environment
 #rm(list=ls())
 
-setwd("C:/Users/meglarse/GitHub/larsen-dissertation/chpt1_NutrStoich/supporting-files/")
-
-#setwd("C:/Users/Megan/GitHub/larsen-dissertation/chpt1_NutrStoich/supporting-files/")
+setwd("C:/Users/meglarse/GitHub/eco-evo-stoich/supporting-files/")
 
 # Load dependancies
 require(plotrix);require(pander)
@@ -43,14 +41,20 @@ perc.means$plot <- c(1,2,3,4)
 # Calculate SEM
 perc.sem <- aggregate(dat.perc[,3],list(dat.perc$med.base, dat.perc$med.add), sem)
 
-pdf(file = "./chpt-figs/fig-pub_perchange.pdf",width=5,height=5,pointsize = 12, family ="sans")
 
-
+# Select the file type
+#pdf(file = "./chpt-figs/fig-pub_perchange.pdf",width=5,height=5,pointsize = 12, family ="sans")
 #png(filename = "./pub-figures/fig1-perchange.png",
 #    width = 570, height = 570, units = "px", pointsize = 17,
 #    bg = "white", family = "sans", type = "cairo")
-par(mar = c(5,5,2,1) + 0.1, mfrow = c(1,1))
-perc.plot<- plot(perc.means[,3] ~ perc.means[,4], 
+
+
+tiff(filename = "./pub-figures/Fig1-PercChange.tiff",
+     width = 570, height = 570, units = "px", pointsize = 11,
+     bg = "white", res = 100)
+
+par(mar = c(6,5,2,1) + 0.1, mfrow = c(1,1))
+plot(perc.means[,3] ~ perc.means[,4], 
      xaxt = 'n', las = 1,
      xlim = c(0.5,4.5),ylim = c(0,100),
      xlab = list("N-limited              P-limited", cex = 1.5, font = 2) , 
@@ -83,19 +87,24 @@ day.start <- -6
 day.end <- 170
 
 
-pdf(file = "./chpt-figs/fig-pub_AvgPopDynamics.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
+#pdf(file = "./chpt-figs/fig-pub_AvgPopDynamics.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
 
+tiff(filename = "./pub-figures/Fig2-AvgPopDynamics.tiff",
+     width = 1140, height = 570, units = "px", pointsize = 13,
+     bg = "white", res = 100)
 
 par(mfrow = c(1,2))
 par(mar = c(4,6,3,0)+0.1)
 
 plot(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
-       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
-       xlab = expression(bold("Time (d)")), 
-        ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
-      cex.lab = 1.5, font.lab = 2,cex.main = 1.5,
-       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
-       pch = 21, cex = 1)
+     xlim = c(day.start,day.end), ylim = c(1*10^5,10^9),
+     main = "N-limited",
+     log = "y", xaxt = 'n',yaxt = 'n',
+     xlab = expression(bold("Time (d)")), 
+     ylab = expression(bold(paste("Abundance (mL"^"-1",")"))),
+     cex.lab = 1.5, font.lab = 2,cex.main = 1.5,
+     lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+     pch = 21, cex = 1)
 
 if(day.start <= 0){
     abline(v = 0, lwd = 2, lty = 1, col = "black")
@@ -119,29 +128,31 @@ arrows(avg$day[avg$day >= day.start],
        avg$NmeanSI[avg$day >= day.start]-avg$NseSI[avg$day >= day.start],
        avg$day[avg$day >= day.start],
        avg$NmeanSI[avg$day >= day.start]+avg$NseSI[avg$day >= day.start],
-       code=0,lwd=1.5)
-arrows(avg$day,avg$NmeanP-avg$NseP,avg$day,avg$NmeanP+avg$NseP,code=0,lwd=1.5)
+       code=0,lwd=2.25)
+arrows(avg$day,avg$NmeanP-avg$NseP,avg$day,avg$NmeanP+avg$NseP,code=0,lwd=2.25)
   
 points(avg$day[avg$day >= day.start],avg$NmeanSI[avg$day >= day.start],
       pch = 21, col = "black",bg = "white",
-      type = 'o',lwd = 1.5,cex = 1, lty = 1)
+      type = 'o',lwd = 1.75,cex = 1.75, lty = 1)
 points(avg$day,avg$NmeanP,
       pch = 22, col = "black",bg = "black",
-      type = 'l',lwd = 1.5,cex = 1 , lty = 1)
+      type = 'l',lwd = 1.75,cex = 1.75 , lty = 1)
 points(avg$day,avg$NmeanP,
-      pch = 22, col = "darkgrey",bg = "black",
-      type = 'p',lwd = 0.5,cex = 1 , lty = 1)
+      pch = 22, col = "white",bg = "black",
+      type = 'p',lwd = 1.75,cex = 1.75 , lty = 1)
 
-text("a",cex=2.5,x=162,y=10^8.8)
+#text("a",cex=2.5,x=162,y=10^8.8)
 
 par(mar = c(4,4,3,2)+0.1)
 
 #PL
 plot(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
-       xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), log = "y", xaxt = 'n',yaxt = 'n',
-       xlab = expression(bold("Time(d)")), ylab = NA,cex.lab = 1.5, cex.main = 1.5,
-       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
-       pch = 21, cex = 1, font.lab = 2)
+     xlim = c(day.start,day.end),ylim = c(1*10^5,10^9), 
+     main = "P-limited",
+     log = "y", xaxt = 'n',yaxt = 'n',
+     xlab = expression(bold("Time(d)")), ylab = NA,cex.lab = 1.5, cex.main = 1.5,
+     lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+     pch = 21, cex = 1, font.lab = 2)
 
 if(day.start <= 0){
     abline(v = 0, lwd = 2, lty = 1, col = "black")
@@ -162,22 +173,22 @@ box(lwd=3)
 arrows(avg$day[avg$day >= day.start],
        avg$PmeanSI[avg$day >= day.start]-avg$PseSI[avg$day >= day.start],
        avg$day[avg$day >= day.start],
-       avg$PmeanSI[avg$day >= day.start]+avg$PseSI[avg$day >= day.start],code=0,lwd=1.5)
-arrows(avg$day,avg$PmeanP-avg$PseP,avg$day,avg$PmeanP+avg$PseP,code=0,lwd=1.5)
+       avg$PmeanSI[avg$day >= day.start]+avg$PseSI[avg$day >= day.start],code=0,lwd=2.25)
+arrows(avg$day,avg$PmeanP-avg$PseP,avg$day,avg$PmeanP+avg$PseP,code=0,lwd=2.25)
 
 points(avg$day[avg$day >= day.start],avg$PmeanSI[avg$day >= day.start],
       pch = 21, col = "black",bg = "white",
-      type = 'o',lwd = 1.5,cex = 1, lty = 1)
+      type = 'o',lwd = 1.75,cex = 1.75, lty = 1)
 points(avg$day,avg$PmeanP,
       pch = 22, col = "black",bg = "black",
-      type = 'l',lwd = 1.5,cex = 1, lty = 1)
+      type = 'l',lwd = 1.75,cex = 1.75, lty = 1)
 points(avg$day,avg$PmeanP,
-      pch = 22, col = "darkgrey",bg = "black",
-      type = 'p',lwd = 0.5,cex = 1, lty = 1)
+      pch = 22, col = "white",bg = "black",
+      type = 'p',lwd = 1.75,cex = 1.75, lty = 1)
 
-text("b",cex=2.5,x=162,y=10^8.8)
+#text("b",cex=2.5,x=162,y=10^8.8)
 
-legend("bottomright", c("Phage","Synechococcus"),
+legend("bottomright", c("SRIM8 phage","Synechococcus"),
        pch = c(22,21), col = "black", 
        pt.bg = c("black","white"),pt.cex = 1.25, pt.lwd = 2,
      text.font = c(1,3),
