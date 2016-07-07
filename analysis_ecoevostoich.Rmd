@@ -1,5 +1,5 @@
 ---
-title: Appendix 1
+title: Statistical analysis
 output: 
   pdf_document:
     fig_caption: yes
@@ -41,7 +41,6 @@ knitr::opts_chunk$set(fig.width=5, fig.height=5,
 
 ```
 
-
 ```{r startup, include = FALSE}
 # Initialize the caption list
 
@@ -62,6 +61,7 @@ J.T. Lennon, *Indiana University, Bloomington, IN*
 
 S.W. Wilhelm, *University of Tennessee - Knoxville, Knoxville TN*
 
+
 **Project questions**
 
 1. Does resource stoichiometry affect the growth rate of *Synechococcus*?
@@ -69,6 +69,7 @@ S.W. Wilhelm, *University of Tennessee - Knoxville, Knoxville TN*
 3. Does stoichiometry alter phenotypic (co)evolution in cyanobacteria and phage?
 
 **Data collection**
+
 Briefly, all data for this project was collected during a long term continuous culture experimental evolution study with *Synechococcus* and SRIM-8 cyanomyophage.
 
 For a complete description of the materials and methods for this repository, see Larsen *et al.* 2016.
@@ -88,6 +89,7 @@ Funding for this project was provided in part by the National Science Foundation
 1. Addition of N or P to our N-limited or P-limited media increased *Synechococcus* in comparison to the control treatment (Figure 1, Table 1). 
 
 *Analysis Notes:*
+
 1. Population growth curve data was collected on a Biotek Synergy Mx instrument loaded with softward version 2.01.12.
 2. Growth rate calculations were completed using lab generated code for bacterial growth rate analysis for the above instrument and can be found at ` http://github.com/LennonLab/Growth_Curves`.
 
@@ -106,7 +108,7 @@ growth.modGomp("./data/NutrGR.csv","csv_test",synergy = F, temp = F, smooth = FA
 
 ```
 
-```{r gr-vis}
+```{r gr-vis, fig.cap= "Nitrogen (N) and phosphorus (P) addition to the base N-limited and P-limited media used in the chemostat experiment. Culture controls (C) did not contain additional N or P."}
 # read in data file
 dat <- read.csv("./data/NutrGR.csv", header = T)
 
@@ -124,14 +126,14 @@ p <- ggplot(dat,aes(med.add,GR)) +
                                     margin = margin(20,20,10,10)),
         axis.title.y = element_text(colour="black", size=12,
                                     margin = margin(20,20,10,10)))+
-  labs(x ="Resource Addition",
+  labs(x ="Nutrient Addition to base media",
        #y = expression(~ Delta ~"Growth Rate (day^ -1)"))
-       y = "Growth Rate")
+       y = "Growth Rate (per day) ")
 p$data$med.add = factor(p$data$med.add, levels = c("C","P","N","NP"))
 
 print(p)
 
-ggsave("fig_nutrGR.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 3.5, units = "in", dpi = 1200)
+#ggsave("fig_nutrGR.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 3.5, units = "in", dpi = 1200)
 
 # calculate means for each group
 dat.ag <- aggregate(GR ~ media.base + med.add, dat, function(x) c(mean = mean(x), sd = sd(x)))
@@ -152,24 +154,19 @@ colnames(dat.ag) = c("Base Media","Added Resource","Growth rate")
 **N-limited**
 
 ```{r gr-statsN}
-
+# calulate statistics
 fitN = aov(GR ~ med.add, dat[dat$media.base == "NL",])
 sum.fitN = summary(fitN)
 tukey.fitN = TukeyHSD(fitN)
 
-round(tukey.fitN$med.add, digits = 3)
+#make tables
 set.caption("ANOVA table for NL nutrient addition")
 pander(aov(GR ~ med.add, dat[dat$media.base == "NL",]),table.split.table = inf)
 
 set.caption("Posthoc comparisons using Tukey HSD")
-#emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
+emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
 pander(tukey.fitN$med.add[,1:4],table.split.table = inf)
 #write.csv(file = "./supporting-files/data/NL-nutrGRstats.csv",tukey.fitN$med.add)
-#kable(tukey.fitN$med.add[,1:4], format = "latex", digits = 3, 
-#      caption = "ANOVA table for N-limited treatments with Tukey post-hoc comparisons")
-
-x <- xtable(tukey.fitN$med.add, digits = 3)
-
 ```
 
 **P-limited**
@@ -180,9 +177,6 @@ fitP = aov(GR ~ med.add, dat[dat$media.base == "PL",])
 sum.fitP = summary(fitP)
 tukey.fitP = TukeyHSD(fitP)
 
-xtable(tukey.fitP$med.add, digits = 3)
-
-#round(tukey.fit$med.add, digits = 3)
 set.caption("ANOVA table for PL nutrient addition")
 pander(aov(GR ~ med.add, dat[dat$media.base == "PL",]),table.split.table = inf)
 
@@ -190,8 +184,6 @@ set.caption("Posthoc comparisons using Tukey HSD")
 emphasize.strong.rows(which(tukey.fitP$med.add[,4] < 0.05, arr.ind = TRUE))
 pander(tukey.fitP$med.add[,1:4],table.split.table = inf)
 #write.csv(file = "./supporting-files/data/PL-nutrGRstats.csv",tukey.fitP$med.add)
-#kable(tukey.fitP$med.add[,1:4], format = "latex", digits = 3, 
-#      caption = "ANOVA table for P-limited treatments with Tukey post-hoc comparisons")
 
 ```
 
@@ -251,7 +243,7 @@ p2$data$med.add = factor(p2$data$med.add, levels = c("P","N","NP"))
 
 print(p2)
 
-ggsave("fig_perc.change.pdf", plot = p2, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 3.5, units = "in", dpi = 1200)
+#ggsave("fig_perc.change.pdf", plot = p2, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 3.5, units = "in", dpi = 1200)
  
 
 # calculate means for each group
@@ -386,14 +378,14 @@ colnames(cstat.abd) <- c("day","microbe","lim","type","cID","abd")
 day.start = -125
 day.end = 170
 
-pdf(file = "./supporting-files/chpt-figs/fig_NL-cstats.pdf", width = 8, height = 4.5, pointsize = 7)
+#pdf(file = "./supporting-files/chpt-figs/fig_NL-cstats.pdf", width = 8, height = 4.5, pointsize = 7)
 par(mfrow = c(2,3))
 plot.ts(data = cstat.abd, cid = "NL2",day.start = day.start, day.end = day.end)
 plot.ts(data = cstat.abd, cid = "NL3",day.start = day.start, day.end = day.end)
 plot.ts(data = cstat.abd, cid = "NL5",day.start = day.start, day.end = day.end)
 plot.ts(data = cstat.abd, cid = "NL1",day.start = day.start, day.end = day.end)
 plot.ts(data = cstat.abd, cid = "NL4",day.start = day.start, day.end = day.end)
-dev.off()
+#dev.off()
 
 ```
 
@@ -401,7 +393,7 @@ dev.off()
 
 ```{r,results='hide', fig.height=5, fig.width=6,echo=FALSE,fig.cap="P-Limited Chemostats"}
 
-pdf(file = "./supporting-files/chpt-figs/fig_PL-cstats.pdf", width = 8, height = 4.5, pointsize = 7)
+#pdf(file = "./supporting-files/chpt-figs/fig_PL-cstats.pdf", width = 8, height = 4.5, pointsize = 7)
 
 par(mfrow = c(2,3))
 plot.ts(data = cstat.abd, cid = "PL2",day.start = day.start, day.end = day.end)
@@ -410,7 +402,7 @@ plot.ts(data = cstat.abd, cid = "PL5",day.start = day.start, day.end = day.end)
 plot.ts(data = cstat.abd, cid = "PL1",day.start = day.start, day.end = day.end)
 plot.ts(data = cstat.abd, cid = "PL3",day.start = day.start, day.end = day.end)
 
-dev.off()
+#dev.off()
 ```
 
 
@@ -438,7 +430,7 @@ p = ggplot(cstat.abd[cstat.abd$lim == "N" & cstat.abd$type == "Infect",], aes(x 
 
 print(p)
 
-ggsave("fig_NL-cstatsINF.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", width = 10, height = 3.5, units = "in", dpi = 1200)
+#ggsave("fig_NL-cstatsINF.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", width = 10, height = 3.5, units = "in", dpi = 1200)
 
 # P-limited dynamics
 p = ggplot(cstat.abd[cstat.abd$lim == "P",], aes(x = day,y = abd)) +
@@ -463,7 +455,7 @@ p$data$type = factor(p$data$type, levels = c("Infect","Control"))
 
 print(p)
 
-ggsave("fig_PL-cstats.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 6, units = "in", dpi = 1200)
+#ggsave("fig_PL-cstats.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 6, units = "in", dpi = 1200)
 
 ```
 
@@ -661,7 +653,7 @@ ar1.syn <- lme(log.abd ~ lim * day, random = ~ 1 | cID,
             correlation=corAR1(form = ~ 1 | cID),
             data=ts.abd)
 #summary(ar1.syn)
-xtable(anova.lme(ar1.syn,type="sequential"), digits = 4)
+#xtable(anova.lme(ar1.syn,type="sequential"), digits = 4)
 
 ```
 
@@ -677,7 +669,7 @@ ar1.syn <- lme(log.abd ~ lim * day * type, random = ~ 1 | cID,
             correlation=corAR1(form = ~ 1 | cID),
             data=ts.abd)
 #summary(ar1.syn)
-xtable(anova.lme(ar1.syn,type="sequential"))
+#xtable(anova.lme(ar1.syn,type="sequential"))
 #install.packages("multcomp")
 require(multcomp)
 summary(glht(ar1.syn), 
@@ -685,7 +677,7 @@ summary(glht(ar1.syn),
         test = adjusted(type = "bonferroni"))
 
 
-#pander(anova(ar1.syn))  
+pander(anova(ar1.syn))  
 
 
 
@@ -697,6 +689,27 @@ summary(glht(ar1.syn),
 ### Temporal autocorrelation
 
 ```{r,echo=FALSE, fig.height=4,fig.width=6}
+```{r,fig.width=6,fig.height=4,echo=FALSE}
+sync <- read.csv("./output/cstatabd-stats.csv", header = T)
+sync <- subset(sync, sync$day < 156)
+sync <- na.omit(sync)
+
+#subset data into NL and PL data sets
+syncN <- subset(sync, sync$lim == "N")
+syncP <- subset(sync, sync$lim == "P")
+
+#Creat cross-correlation plots
+ccf.cstat <- function(cID=""){
+    ccf(sync$Syn[sync$cID == cID], sync$Phage[sync$cID == cID], 
+    lag.max = 8, type = "correlation", 
+    ylab = "CCF", main = cID, las = 1,
+    plot = T, ylim = c(-0.5,0.5))
+}
+
+par(mfrow = c(2,3))
+ccf.cstat(cID="NL2"); ccf.cstat(cID="NL3"); ccf.cstat(cID="NL5")
+ccf.cstat(cID="PL2"); ccf.cstat(cID="PL4"); ccf.cstat(cID="PL5")
+
 par(mfrow = c(1,2))
 ccfN <- ccf(syncN$Syn, syncN$Phage, lag.max = 8, type = "correlation", 
     ylab = "CCF", main = "N-limited",
@@ -757,10 +770,10 @@ syn <- subset(ts.abd,ts.abd$microbe == "Syn")
 ar1.phage <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
             correlation=corAR1(form = ~ 1 | cID),
             data=phage)
-xtable(anova.lme(ar1.phage, type = "marginal"))
+#xtable(anova.lme(ar1.phage, type = "marginal"))
 
 #summary(ar1.phage)
-#pander(anova(ar1.phage))
+pander(anova(ar1.phage))
 
 #Syn
 ar1.syn <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
@@ -770,7 +783,7 @@ anova.lme(ar1.syn, type = "marginal")
 
 
 #summary(ar1.syn)
-#pander(anova(ar1.syn))
+pander(anova(ar1.syn))
 
 ```
 
@@ -812,7 +825,7 @@ for(i in unique(ts.abd$cID)){
 
 basic.stats <- basic.stats[order(basic.stats$microbe),]
 rownames(basic.stats)=NULL
-#pander(basic.stats)
+pander(basic.stats)
 ```
 
 
@@ -922,8 +935,8 @@ rownames(top.sort)=NULL
 write.csv(top.sort, file = "./supporting-files/data/ts-topographic-info.csv",row.names = FALSE)
 # --> INSERT TABLE OF RESULTS
 
-#pander(top.sort)
-xtable(top.sort)
+pander(top.sort)
+#xtable(top.sort)
 ```
 
 ```{r}
@@ -949,7 +962,7 @@ top.stats[,3] <- round(c(syn.mean[[2]],syn.stab[[2]],phage.mean[[2]],phage.stab[
 top.stats[,4] <- round(c(syn.mean[[3]],syn.stab[[3]],phage.mean[[3]],phage.stab[[3]]), digits = 5)
 
 #top.stats
-#pander(top.stats)
+pander(top.stats)
 ```
 
 
@@ -958,7 +971,7 @@ top.stats[,4] <- round(c(syn.mean[[3]],syn.stab[[3]],phage.mean[[3]],phage.stab[
 
 ### Temporal Synchrony
 
-```{r}
+```{r, eval = FALSE}
 ts.syncN <- phase.sync(syncN$Syn,syncN$Phage)
 peaks.N <- peaks(syncN$Syn,syncN$Phage, nrands=100)
 peaks.N
@@ -1121,7 +1134,7 @@ infect.prop<-function(x){
 # infect.prop(c(0,NA,1))
 ```
 
-```{r}
+```{r, eval = FALSE}
 # separate the infection data so that each time point has a past, contemp, and future metric
 # in each coevolving chemostat
 
@@ -1542,7 +1555,7 @@ sum.mod.arma2=summary(model.arma2)
 #anova(model.arma2)
 
 stats = anova.lme(model.arma2,type = "sequential", adjustSigma = F)
-write.csv(file = "./supporting-files/chpt-tables/SOI-RMANOVA.csv", stats, row.names = FALSE)
+#write.csv(file = "./supporting-files/chpt-tables/SOI-RMANOVA.csv", stats, row.names = FALSE)
 pander(mod.comp[,c(-1,-2,-3,-7)])
 
 #captext = paste0("*Model covariate comparison for RMANOVA.*")
@@ -1591,7 +1604,7 @@ anova(model.arma1)
 \newpage
 
 ## Infection dynamics by chemostat
-```{r,fig.height=11,fig.width=6}
+```{r,fig.height=11,fig.width=6, eval = FALSE}
 par(mfrow = c(3,2), mar = c(5,4,2,2)+0.1)
 inf.network.ts(type = "cstat", cid = "NL2", phage.color="green", bac.color="black", bac.lty = 1, phage.lty = 1)
 inf.network.ts(type = "cstat", cid = "NL3", phage.color="green", bac.color="black", bac.lty = 1, phage.lty = 1)
@@ -1816,7 +1829,7 @@ dev.off()
 
 ## Community Networks
 
-```{r}
+```{r, eval=FALSE}
 res4 <- read.csv("./output/bor-processed.csv", header = T)
 res4 <- subset(res4, res4$P.cID != "RIM8-1")
 
@@ -1826,7 +1839,7 @@ res4$infectivity[res4$infectivity == 0] <-1
 res4$infectivity[res4$infectivity == 2] <-0
 ```
 
-```{r, results='hide',fig.width=6, fig.height=10}
+```{r, results='hide',fig.width=6, fig.height=10, eval = FALSE}
 h.list<-c(); p.list<-c(); I.list<-c(); sp.list<-c();cstat <- c()
 m.list<-c(); c.list<-c(); lh.list<-c(); lp.list<-c()
 time<-c(); gen.list<-c(); vul.list<-c(); n.list<-c()
@@ -1926,7 +1939,7 @@ colnames(mat.chr)<-c("cID","hosts","phage","links",
 #write.csv()
 ```
 
-```{r,echo=FALSE}
+```{r,echo=FALSE, eval = FALSE}
 res <- as.matrix(mat.chr[,2:11])
 res <- t(res)
 
@@ -2107,7 +2120,7 @@ pcoap <- merge(as.data.frame(bor_pcoa$points),design,by=0,all.x=T)
 rownames(pcoap) <- rownames(bor_pcoa$points)
   
 # Plot Parameters
-pdf(file="./figures/Compositional-Resistance_PA-PCoA.pdf", width = 6, height = 6, pointsize = 12)
+#pdf(file="./figures/Compositional-Resistance_PA-PCoA.pdf", width = 6, height = 6, pointsize = 12)
 
 par(mar=c(5,5,1,1))#, oma=c(3,1,1,1)+0.1 )
 x.dim <- c(min(pcoap$V1)-(max(pcoap$V1)*0.1),max(pcoap$V1)+(max(pcoap$V1)*0.1))
@@ -2146,7 +2159,7 @@ points(pcoap$V1, pcoap$V2, pch=mol.shape, cex=design$B.Time.point/8, bg=slope.co
 #text(pcoap$V1, pcoap$V2, labels=pcoap$B.cID, pos=1) 
 #ordiellipse(cbind(pcoap$V1, pcoap$V2), pcoap$B.trt, kind="sd", conf=0.95,
 	#lwd=2, draw = "polygon", col="grey", border = "black", label=TRUE, cex=2) 
-dev.off()
+#dev.off()
 
 lim = adonis(bor_data ~ design$B.trt, method ="bray", permutations = 999, na.rm = TRUE)
 time = adonis(bor_data ~ as.factor(design$B.daynumber), method ="jaccard", permutations = 999, na.rm = TRUE)
@@ -2160,8 +2173,8 @@ rownames(all$aov.tab) = c("Time","Limitation","Time*Limitation","Residuals","Tot
 
 pander(all$aov.tab)
 
-write.csv(file = "./output/Compositional-Resistance.csv", bor_pcoa$points)
-write.csv(file = "./output/Compositional-Resistance_Adonis.csv", all$aov.tab)
+#write.csv(file = "./output/Compositional-Resistance.csv", bor_pcoa$points)
+#write.csv(file = "./output/Compositional-Resistance_Adonis.csv", all$aov.tab)
 
 #env.dist <- vegdist(env, method="euclid")
 ```
@@ -2203,7 +2216,7 @@ colnames(res2) <- c(nms,paste(syn.trt,".",syn.lim,sep=""))
 
 ### global; sympatric vs. allopatric host range
 
-```{r, fig.width=6,fig.height=4}
+```{r, fig.width=6,fig.height=4, eval = FALSE}
 #phage.bor <- read.csv("./output/phage-bor.csv", header = T)
 
 res2 <- res2[-1,]
@@ -2294,7 +2307,7 @@ points(allo ~ P.daynumber, data = bor.tsmeansP,
        type = "o", lty = 1, lwd = 2, col = "red")
 ```
 
-```{r}
+```{r, eval = FALSE}
 dat = data.frame(res2$P.trt,res2$P.daynumber,res2$P.lim, res2$P.cID, res2$global, res2$symco)
 dat$B.type = c(rep("coevo",nrow(dat)))
 
@@ -2336,7 +2349,7 @@ pander(anova(model.sym))
 \newpage
 
 ### Compositional infectivity
-```{r, fig.height = 4, fig.width = 4}
+```{r, fig.height = 4, fig.width = 4, eval = FALSE}
 phage.bor <- read.csv("./output/phage-bor.csv", header = T)
 #bor_data <- phage.bor[,7:(ncol(phage.bor)-3)]
 
@@ -2369,7 +2382,7 @@ pcoap = pcoap[-96,]
   
 # Plot Parameters
 
-pdf(file="./figures/Compositional-Infectivity_PA-PCoA.pdf", width = 6, height = 6, pointsize = 12)
+#pdf(file="./figures/Compositional-Infectivity_PA-PCoA.pdf", width = 6, height = 6, pointsize = 12)
 par(mar=c(5,5,1,1))#, oma=c(3,1,1,1)+0.1 )
 x.dim <- c(min(pcoap$V1)-(max(pcoap$V1)*0.1),max(pcoap$V1)+(max(pcoap$V1)*0.1))
 y.dim <- c(min(pcoap$V2)-(max(pcoap$V2)*0.1),max(pcoap$V2)+(max(pcoap$V2)*0.1))
@@ -2406,7 +2419,7 @@ text(pcoap$V1, pcoap$V2, labels=pcoap$P.daynumber, pos=3)
 #ordiellipse(cbind(pcoap$V1, pcoap$V2), pcoap$B.trt, kind="sd", conf=0.95,
 	#lwd=2, draw = "polygon", col="grey", border = "black", label=TRUE, cex=2) 
 
-dev.off()
+#dev.off()
 
 mod1 = adonis(bor_data ~ design$P.trt, method ="jaccard", permutations = 999, na.rm = TRUE)
 mod2=adonis(bor_data ~ as.factor(design$P.daynumber), method ="jaccard", permutations = 999, na.rm = TRUE)
@@ -2419,8 +2432,8 @@ rownames(all$aov.tab) = c("Time","Limitation","Time*Limitation","Residuals","Tot
 
 pander(all$aov.tab)
 
-write.csv(file = "./output/Compositional-Infectivity.csv", bor_pcoa$points)
-write.csv(file = "./output/Compositional-Infectivity_Adonis.csv", all$aov.tab)
+#write.csv(file = "./output/Compositional-Infectivity.csv", bor_pcoa$points)
+#write.csv(file = "./output/Compositional-Infectivity_Adonis.csv", all$aov.tab)
 
 #env <- data.frame(design$P.trt,design$P.cID, as.factor(design$P.daynumber))
 #env.dist <- vegdist(env, method = "euclid")
@@ -2428,7 +2441,7 @@ write.csv(file = "./output/Compositional-Infectivity_Adonis.csv", all$aov.tab)
 \newpage
 
 ## Treatement level degree of infection
-```{r}
+```{r, eval = FALSE}
 res4 <- read.csv("./output/bor-processed.csv", header = T)
 
 #Initialize data storage
@@ -2477,7 +2490,7 @@ colnames(bor.cstat) <- c("lim","phage.time","bac.time","inf.prob")
 #head(bor.cstat)
 ```
 
-```{r,fig.height=5,fig.width=6}
+```{r,fig.height=5,fig.width=6, eval = FALSE}
 par(mfrow = c(1,2), mar = c(5,4,2,1)+0.1)
 inf.network.ts(type = "treatment", cid = "N", phage.color="green", bac.color="black",bac.lty = 1,phage.lty = 1)
 inf.network.ts(type = "treatment", cid = "P", phage.color="green", bac.color="black",bac.lty = 1,phage.lty = 1)
