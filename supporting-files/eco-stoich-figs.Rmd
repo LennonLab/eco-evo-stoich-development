@@ -200,7 +200,7 @@ dev.off()
 ```
 
 
-```{r avgpops-v1-png,results = 'hide', fig.height=3.75, fig.width=8, echo=FALSE, fig.cap="Treatment Chemostats"}
+```{r avgpops-v1-png,results = 'hide', fig.height=3.75, fig.width=8, echo=FALSE, fig.cap="Treatment Chemostats", eval = FALSE}
 day.start <- -6
 day.end <- 170
 
@@ -352,7 +352,11 @@ Ptrt <- Ptrt[2:dim(Ptrt)[[1]], 2:(dim(Ptrt))[[2]]]
 ```
 
 ```{r}
-pdf(file = "./chpt-figs/fig-pub_CoEvoDynamics.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
+#pdf(file = "./chpt-figs/fig-pub_CoEvoDynamics.pdf",width=8.5,height=4,pointsize = 10, family ="sans")
+
+tiff(filename = "./pub-figures/Fig3-CoEvoDynamics.tiff",
+     width = 1140, height = 570, units = "px", pointsize = 13,
+     bg = "white", res = 100)
 
 par(mfrow = c(1,2))
 par(mar = c(4,6,3,1)+0.1)
@@ -487,21 +491,6 @@ axis(2, at = c(-1,0,1),labels = c("+Ph","phage","-Ph"),cex.axis = 1,font = 3, la
 
 box(lwd = 2)
 
-dev.off()
-```
-
-
-```{r,echo=FALSE,fig.height=5,fig.width=8,results='hide'}
-png(filename = "./pub-figures/fig3-InfDynamics.png",
-    width = 1140, height = 500, units = "px", pointsize = 17,
-    bg = "white", family = "sans", type = "cairo")
-
-par(mfrow = c(1,2), mar = c(5,6,3,1)+0.1)
-inf.network(type = "treatment", cid = "N", phage.color="black", bac.color="black")
-box(lwd=3)
-par(mar = c(5,4,3,2)+0.1)
-inf.network(type = "treatment", cid = "P", phage.color="black", bac.color="black")
-box(lwd=3)
 dev.off()
 ```
 
