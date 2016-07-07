@@ -83,31 +83,17 @@ Funding for this project was provided in part by the National Science Foundation
 
 # Physiological growth: Does nutrient stoichiometry affect the growth rate of *Synechococcus*?
 
-**Overview**: In this experiment, we tested for growth enhancement with the addtion of N or P to our stoichiometrically amended AN media (Lennon *et al.* 2007; see Larsen *et al.* 2016 Table S1). 
+**Overview**: In this experiment, we tested for growth enhancement with the addtion of nitrogen (N), phosphosphorus (P), or the addition of both nutrients to our stoichiometrically modified AN media (Lennon *et al.* 2007; see Larsen *et al.* 2016 Table S1). Population growth curve data was collected on a Biotek Synergy Mx instrument loaded with software version 2.01.12.
 
 ## Summary of Major Results
-1. Addition of N or P to our N-limited or P-limited media increased *Synechococcus* in comparison to the control treatment (Figure 1, Table 1). 
+1. Addition of N or P to the N-limited or P-limited base medium, respectively, increased *Synechococcus* maximum growth rate (Figure 1) and percent change in growth (Figure 2) in batch culture as compared to control cultures without the addition of N or P. 
 
-*Analysis Notes:*
 
-1. Population growth curve data was collected on a Biotek Synergy Mx instrument loaded with softward version 2.01.12.
-2. Growth rate calculations were completed using lab generated code for bacterial growth rate analysis for the above instrument and can be found at ` http://github.com/LennonLab/Growth_Curves`.
 
 
 \newpage
 
 ## *Synechococcus* growth rates with response to nutrient addition
-```{r gr-calcs, include = FALSE, eval = FALSE}
-# Load dependencies
-source("~/Github/Growth_Curves/modified_Gomp.R")
-
-# specify output location if needed
-
-# calculate growth curves
-growth.modGomp("./data/NutrGR.csv","csv_test",synergy = F, temp = F, smooth = FALSE)
-
-```
-
 ```{r gr-vis, fig.cap= "Nitrogen (N), phosphorus (P), or NP addition to the base N-limited and P-limited media used in the chemostat experiment. Culture controls (C) did not contain additional N or P."}
 # read in data file
 dat <- read.csv("./data/NutrGR.csv", header = T)
@@ -221,7 +207,7 @@ results = data.frame(media,trt,avgGR,stdGR,delta, perc)
 colnames(results) = c("med.base","med.add","mean.GR","std.GR", "delta.GR","perc.change")
 
 results = results[results$med.add != "C" & perc >= 0,]
-
+results = results[results$med.add != "NP",]
 
 
 p2 <- ggplot(results,aes(med.add,perc.change)) + facet_grid(~med.base) + 
@@ -229,7 +215,7 @@ p2 <- ggplot(results,aes(med.add,perc.change)) + facet_grid(~med.base) +
   geom_boxplot(aes(fill=med.add), alpha=I(0.5)) +
   scale_color_grey(start = 0.2, end = 0.8) +
   scale_fill_grey(start = 0, end = 1)+
-  theme_bw()+
+  #theme_bw()+
   theme(legend.position='none',
         axis.text.x  = element_text(size=10),
         axis.text.y  = element_text(size=10),
@@ -239,7 +225,7 @@ p2 <- ggplot(results,aes(med.add,perc.change)) + facet_grid(~med.base) +
                                     margin = margin(20,20,10,10)))+
   labs(x ="Resource Addition",
        y = "Percent Change")
-p2$data$med.add = factor(p2$data$med.add, levels = c("P","N","NP"))
+p2$data$med.add = factor(p2$data$med.add, levels = c("N","P"))
 
 print(p2)
 
@@ -259,22 +245,19 @@ set.caption("Resource Percent Change in Growth Aggregate Data")
 
 \newpage
 
-### Growth rate ANOVA tables
+### Growth rate t-test tables
 **N-limited**
 
 ```{r perc.change-statsN}
 # Calulate statistics
-fitN = aov(perc.change ~ med.add, results[results$med.base == "NL",])
-sum.fitN = summary(fitN)
-tukey.fitN = TukeyHSD(fitN)
+fitN = t.test(results$perc.change[results$med.base == "NL" & results$med.add == "N"],
+              results$perc.change[results$med.base == "NL" & results$med.add == "P"],
+              conf.level = 0.95, alternative = "greater")
 
 # Make tables
-set.caption("ANOVA table for NL nutrient addition")
+set.caption("t-test table for NL nutrient addition")
 pander(fitN,table.split.table = inf)
 
-set.caption("Posthoc comparisons using Tukey HSD")
-emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
-pander(tukey.fitN$med.add,table.split.table = inf)
 #write.csv(file = "./supporting-files/data/NL-percGRstats.csv",tukey.fitN$med.add)
 
 
@@ -283,29 +266,25 @@ pander(tukey.fitN$med.add,table.split.table = inf)
 **P-limited**
 ```{r perc.change-statsP}
 
-fitP = aov(perc.change ~ med.add, results[results$med.base == "PL",])
-sum.fitP = summary(fitP)
-tukey.fitP = TukeyHSD(fitP)
+# Calulate statistics
+fitP = t.test(results$perc.change[results$med.base == "PL" & results$med.add == "P"],
+              results$perc.change[results$med.base == "PL" & results$med.add == "N"],
+              conf.level = 0.95, alternative = "greater")
 
-
-set.caption("ANOVA table for PL nutrient addition")
+# Make tables
+set.caption("t-test table for PL nutrient addition")
 pander(fitP,table.split.table = inf)
-
-set.caption("Posthoc comparisons using Tukey HSD")
-#emphasize.strong.rows(which(tukey.fitP$med.add[,4] < 0.05, arr.ind = TRUE))
-pander(tukey.fitP$med.add,table.split.table = inf)
-#write.csv(file = "./supporting-files/data/PL-percGRstats.csv",tukey.fitP$med.add)
 
 
 ```
 
 \newpage
 
-# Population Dynamics: Does nutrient stoichiometry affect temporal dynamics?
+# Population Dynamics: Does nutrient stoichiometry affect temporal population dynamics?
 
 **Overview**: In this experiment, whole samples were collected from each chemostat system three times per week for ~5 months. 
-Each sample was processed,  stained,  and counted using epi-fluorescence on a Zeiss microscope and quantified using Axiovision software. 
-Statistics for these data include repeated measures anova (RMANOVA),  stability (1/CV),  and cross-correlation analyses on whitened data.
+Each sample was processed, stained, and counted using epi-fluorescence on a Zeiss microscope and quantified using Axiovision software. 
+Statistics for these data include repeated measures anova (RMANOVA), stability (1/Coefficient of Variation),  and cross-correlation analyses on whitened data using SAS.
 
 ## Summary of Major Results
 1. Stoichiometry significantly affected *Synechococcus* and phage densities.
@@ -314,6 +293,8 @@ RMANOVA
 3. Modified the temporal coherence, or synchrony, of the *Synechococcus*-phage dynamics, suggesting ecological ramifications of stoichiometry.
 
 \newpage
+
+
 ```{r, results = 'hide'}
 #microscope.counts("./data/TScounts_raw.csv",  "ts-counts")
 ts.counts <- read.csv(file="./output/ts-counts.csv",  header = F)
@@ -368,7 +349,7 @@ colnames(cstat.abd) <- c("day","microbe","lim","type","cID","abd")
 ## Chemostat-level comparisons
 ### Population dynamics
 
-```{r,results='hide', fig.height=5, fig.width=6, echo=FALSE,fig.cap="N-Limited Chemostats"}
+```{r,results='hide', fig.height=5, fig.width=6, echo=FALSE,fig.cap="Individul N-Limited chemostat replicates. Chemostats NL2, NL3, and NL5 contained both *Synechococcus* (black) and SRIM8 phage (green) while chemostats NL1 and NL4 contained only *Synechococcus*. Chemostat NL4 was lost due to fungal contamination prior to phage addition."}
 day.start = -125
 day.end = 170
 
@@ -385,7 +366,7 @@ plot.ts(data = cstat.abd, cid = "NL4",day.start = day.start, day.end = day.end)
 
 \newpage
 
-```{r,results='hide', fig.height=5, fig.width=6,echo=FALSE,fig.cap="P-Limited Chemostats"}
+```{r,results='hide', fig.height=5, fig.width=6,echo=FALSE,fig.cap="Individul P-Limited chemostat replicates. Chemostats PL2, PL4, and PL5 contained both *Synechococcus* (black) and SRIM8 phage (green) while chemostats PL1 and PL3 contained only *Synechococcus*."}
 
 #pdf(file = "./supporting-files/chpt-figs/fig_PL-cstats.pdf", width = 8, height = 4.5, pointsize = 7)
 
@@ -455,10 +436,9 @@ print(p)
 
 
 \newpage
+### Chemostat phase plane diagrams
 
-### Phage to bacteria ratio
-
-```{r, fig.cap= "phage to cyanobacteria ratios"}
+```{r, fig.cap="Phase plane plots of non-time lagged, log transformed Synechococcus and SRIM-8 phage abundances."}
 
 par(mfrow = c(2,3))
 
@@ -471,20 +451,14 @@ dat.sub = data.frame(dat.sub.syn[,1],dat.sub.syn[,3],dat.sub.syn[,5],
 colnames(dat.sub) = c("day","lim","cID","syn.abd","phage.abd","p.b.ratio")
 
 for(i in unique(dat.sub$cID)){
-  plot(x = dat.sub$day[dat.sub$cID == i], y = dat.sub$syn.abd[dat.sub$cID == i], 
+  plot(x = log10(dat.sub$syn.abd[dat.sub$cID == i]), 
+       y = log10(dat.sub$phage.abd[dat.sub$cID == i]), 
        col = "black", lwd = 2, type = "l", 
-       log = "y", 
-       ylim = c(10^4.5,10^9),
-       xlab = "Time (days)", ylab = "Log Abundance", main = i)
+       #ylim = c(10^4.5,10^9),
+       xlab = "Synechococcus", ylab = "SRIM-8", main = i)
   points(dat.sub$day[dat.sub$cID == i], dat.sub$phage.abd[dat.sub$cID == i], 
        col = "grey", lwd = 2, type = "l")
   abline(v = 0, col = "grey")
-  par(new = T)
-  
-  plot(dat.sub$day[dat.sub$cID == i], dat.sub$p.b.ratio[dat.sub$cID == i], 
-       col = "red", lwd = 2, type = "l", axes = F, ylab = NA,xlab=NA, las = 1, 
-       ylim = c(0,5000))
-       #log = "y")
   axis(side=4)
   #mtext("Phage:Cyanobacteria",side=4)
 }
@@ -495,76 +469,22 @@ for(i in unique(dat.sub$cID)){
 \newpage
 
 ## Treatment-level comparisons
-### Controls
-
-
 ```{r, echo=FALSE}
+# Read in data
 avg <- read.csv("./data/cstat-means.csv", header = T)
-
-vbN <- avg$NmeanP/avg$NmeanSI
-vbP <- avg$PmeanP/avg$PmeanSI
 ```
 
-```{r,results = 'hide', fig.height=3.75, fig.width=6,echo=FALSE,fig.cap="Control Chemostats"}
+```{r, fig.height = 3, fig.width = 6.5, fig.cap="Average population dynamics of Synechococcus (white) and SRIM8 phage (black) in N-limited and P-limited nutrient treatments. The dashed line at day 0 indicates the time in which phage were added to the chemostat system."}
 day.start <- -125
 day.end <- 170
 
 par(mfrow = c(1,2))
-par(mar = c(5,6,3,1)+0.1)
-
-
-plot(avg$day,avg$NmeanC,
-       xlim = c(day.start,day.end),ylim = c(1*10^4,10^9), log = "y", xaxt = 'n',yaxt = 'n',
-       xlab = "Time (d)", ylab = expression(paste("Abundance (mL"^"-1",")")),
-     main = "NL", cex.lab = 1.25, font.lab = 1,
-       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
-       pch = 21, cex = 1.5)
-  
-  axis(1, cex.axis = 1.25,c(-120,-80,-40,0,40,80,120,160))
-  ticks <- seq(4, 9, by=1)
-  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
-  axis(2, cex.axis = 1.25, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
-  #abline(v = 0, col = "grey", lty = 2, lwd = 2)
-  box(lwd=3)
-  
-  arrows(avg$day,avg$NmeanC-avg$NseC,avg$day,avg$NmeanC+avg$NseC,code=0,lwd=2)
-  points(avg$day,avg$NmeanC,
-         pch = 21, col = "black",bg = "white",
-         type = 'o',lwd = 3,cex = 1.5, lty = 1)
-
-
-plot(avg$day,avg$PmeanC,
-       xlim = c(day.start,day.end),ylim = c(1*10^4,10^9), log = "y", xaxt = 'n',yaxt = 'n',
-       xlab = "Time (d)", ylab = NA, main = "PL", cex.lab = 1.25, 
-       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
-       pch = 21, cex = 1.5, font.lab = 1)
-  
-  axis(1, cex.axis = 1.25,c(-120,-80,-40,0,40,80,120,160))
-  ticks <- seq(4, 9, by=1)
-  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
-  #axis(2, cex.axis = 1.25, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
-  #abline(v = 0, col = "grey", lty = 2, lwd = 2)
-  box(lwd=3)
-  
-  arrows(avg$day,avg$PmeanC-avg$PseC,avg$day,avg$PmeanC+avg$PseC,code=0,lwd=2)
-  points(avg$day,avg$PmeanC,
-         pch = 21, col = "black",bg = "white",
-         type = 'o',lwd = 3,cex = 1.5, lty = 1)
-
-```
-
-### Treatment (i.e. Exposed) population abundances
-```{r,results = 'hide', fig.height=3.75, fig.width=6, echo=FALSE, fig.cap="Treatment Chemostats"}
-day.start <- -125
-day.end <- 170
-
-par(mfrow = c(1,2))
-par(mar = c(5,6,3,1)+0.1)
+par(mar = c(5,6,3,0)+0.1)
 
 plot(avg$day,avg$NmeanSI,
        xlim = c(day.start,day.end),ylim = c(1*10^4,10^9), log = "y", xaxt = 'n',yaxt = 'n',
        xlab = "Time (d)", ylab = expression(paste("Abundance (mL"^"-1",")")), 
-     cex.lab = 1.25, font.lab = 1, main = "NL",
+     cex.lab = 1.25, font.lab = 1, main = "N-Limited",
        lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
        pch = 21, cex = 1)
   
@@ -596,16 +516,17 @@ plot(avg$day,avg$NmeanSI,
 #mtext("Phage to Cyanobacteria",side=4,line=3)
 
 #PL
-plot(avg$day,avg$PmeanSI,
+par(mar = c(5,4,3,2)+0.1)
+  plot(avg$day,avg$PmeanSI,
        xlim = c(day.start,day.end),ylim = c(1*10^4,10^9), log = "y", xaxt = 'n',yaxt = 'n',
-       xlab = "Time (d)", ylab = NA, main = "PL",cex.lab = 1.25, 
+       xlab = "Time (d)", ylab = NA, main = "P-Limited",cex.lab = 1.25, 
        lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
        pch = 21, cex = 1, font.lab = 1)
   
   axis(1, cex.axis = 1.25,c(-120,-80,-40,0,40,80,120,160))
   ticks <- seq(4, 9, by=1)
   labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
-  #axis(2, cex.axis = 1.25, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+  axis(2, cex.axis = 1.25, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
   #abline(v = 0, col = "grey", lty = 2, lwd = 2)
   box(lwd=3)
   
@@ -635,95 +556,56 @@ plot(avg$day,avg$PmeanSI,
 
 ```
 
-**RMANOVA for control cyanobacteria**
-```{r, eval = FALSE}
-ts.abd <- subset(cstat.abd,cstat.abd$type == "Control" & cstat.abd$day > 0)
-ts.abd <- na.omit(ts.abd)
-
-ts.abd$log.abd <- log10(ts.abd$abd)                   #Create a column of log data
-ts.abd$day.fac <- as.factor(ts.abd$day)               #Convert time into a factor
-    
-ar1.syn <- lme(log.abd ~ lim * day, random = ~ 1 | cID, 
-            correlation=corAR1(form = ~ 1 | cID),
-            data=ts.abd)
-#summary(ar1.syn)
-#xtable(anova.lme(ar1.syn,type="sequential"), digits = 4)
-
-```
-
-**RMANOVA for control vs exposed cyanobacteria densities**
-```{r, eval = FALSE}
-ts.abd <- subset(cstat.abd,cstat.abd$microbe == "Syn" & cstat.abd$day > 0)
-ts.abd <- na.omit(ts.abd)
-
-ts.abd$log.abd <- log10(ts.abd$abd)                   #Create a column of log data
-ts.abd$day.fac <- as.factor(ts.abd$day)               #Convert time into a factor
-    
-ar1.syn <- lme(log.abd ~ lim * day * type, random = ~ 1 | cID, 
-            correlation=corAR1(form = ~ 1 | cID),
-            data=ts.abd)
-#summary(ar1.syn)
-#xtable(anova.lme(ar1.syn,type="sequential"))
-#install.packages("multcomp")
-require(multcomp)
-summary(glht(ar1.syn), 
-             #linfct=mcp(Material = "Tukey")), 
-        test = adjusted(type = "bonferroni"))
-
-
-pander(anova(ar1.syn))  
-
-
-
-  
-```
-
-\newpage
-
-### Temporal autocorrelation
-
-```{r,echo=FALSE, fig.height=4,fig.width=6}
-```{r,fig.width=6,fig.height=4,echo=FALSE}
-sync <- read.csv("./output/cstatabd-stats.csv", header = T)
-sync <- subset(sync, sync$day < 156)
-sync <- na.omit(sync)
-
-#subset data into NL and PL data sets
-syncN <- subset(sync, sync$lim == "N")
-syncP <- subset(sync, sync$lim == "P")
-
-#Creat cross-correlation plots
-ccf.cstat <- function(cID=""){
-    ccf(sync$Syn[sync$cID == cID], sync$Phage[sync$cID == cID], 
-    lag.max = 8, type = "correlation", 
-    ylab = "CCF", main = cID, las = 1,
-    plot = T, ylim = c(-0.5,0.5))
-}
-
-par(mfrow = c(2,3))
-ccf.cstat(cID="NL2"); ccf.cstat(cID="NL3"); ccf.cstat(cID="NL5")
-ccf.cstat(cID="PL2"); ccf.cstat(cID="PL4"); ccf.cstat(cID="PL5")
+```{r, size = 10 ,fig.height = 3, fig.width = 6.5, fig.cap="Average Synechococcus densisites in control chemostats without phage."}
+day.start <- -125
+day.end <- 170
 
 par(mfrow = c(1,2))
-ccfN <- ccf(syncN$Syn, syncN$Phage, lag.max = 8, type = "correlation", 
-    ylab = "CCF", main = "N-limited",
-    plot = T, ylim = c(-0.5,0.5))
-#print(ccfN)
+par(mar = c(5,6,3,0)+0.1)
 
-ccfP <- ccf(syncP$Syn, syncP$Phage, lag.max = 8, type = "correlation", 
-    ylab = "CCF", main = "P-limited",
-    plot = T, ylim = c(-0.5,0.5))
-#print(ccfP)
+
+plot(avg$day,avg$NmeanC,
+       xlim = c(day.start,day.end),ylim = c(1*10^4,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = expression(paste("Abundance (mL"^"-1",")")),
+     main = "N-Limited", cex.lab = 1.25, font.lab = 1,
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+       pch = 21, cex = 1.5)
+  
+  axis(1, cex.axis = 1.25,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.25, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1)
+  #abline(v = 0, col = "grey", lty = 2, lwd = 2)
+  box(lwd=3)
+  
+  arrows(avg$day,avg$NmeanC-avg$NseC,avg$day,avg$NmeanC+avg$NseC,code=0,lwd=2)
+  points(avg$day,avg$NmeanC,
+         pch = 21, col = "black",bg = "white",
+         type = 'o',lwd = 3,cex = 1.5, lty = 1)
+
+par(mar = c(5,4,3,2)+0.1)
+plot(avg$day,avg$PmeanC,
+       xlim = c(day.start,day.end),ylim = c(1*10^4,10^9), log = "y", xaxt = 'n',yaxt = 'n',
+       xlab = "Time (d)", ylab = NA, main = "P-Limited", cex.lab = 1.25, 
+       lty = 1, lwd = 2, type = "o", col = "black", bg = "white", 
+       pch = 21, cex = 1.5, font.lab = 1)
+  
+  axis(1, cex.axis = 1.25,c(-120,-80,-40,0,40,80,120,160))
+  ticks <- seq(4, 9, by=1)
+  labels <- sapply(ticks, function(i) as.expression(bquote(10^ .(i))))
+  axis(2, cex.axis = 1.25, at = c(10^4,10^5, 10^6, 10^7, 10^8, 10^9), labels = labels, las = 1, font = 2)
+  #abline(v = 0, col = "grey", lty = 2, lwd = 2)
+  box(lwd=3)
+  
+  arrows(avg$day,avg$PmeanC-avg$PseC,avg$day,avg$PmeanC+avg$PseC,code=0,lwd=2)
+  points(avg$day,avg$PmeanC,
+         pch = 21, col = "black",bg = "white",
+         type = 'o',lwd = 3,cex = 1.5, lty = 1)
+
 ```
-
 \newpage
 
-## Statistical analyses
-*NOTE*:Cross-correlation analyses and RMANOVA were also completed in SAS
-
-
-### Heteroskedaskicity (i.e skewness) with treatment data only
-
+### Heteroskedaskicity (skewness)
 ```{r, fig.width=6, fig.height=5, echo=FALSE}
 cstat.abd <- read.csv("./output/cid-means.csv", header = T)
 
@@ -745,8 +627,8 @@ boxplot(log10(pphage$abd),log10(nphage$abd), main = "phage.log", names = c("N", 
 ```
 
 \newpage
-
 ### Reapeated Measures ANOVA (RMANOVA)
+**+Ph *Synechococcus* and phage**
 ```{r, echo=FALSE}
 # this is a mixed equation model where day and treatment are fixed factors, 
 # while cID is a random factor
@@ -767,23 +649,103 @@ ar1.phage <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID,
 #xtable(anova.lme(ar1.phage, type = "marginal"))
 
 #summary(ar1.phage)
+set.caption("RMANOVA table for SRIM8 phage")
 pander(anova(ar1.phage))
 
 #Syn
 ar1.syn <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
             correlation=corAR1(form = ~ 1 | cID),
             data=syn)
-anova.lme(ar1.syn, type = "marginal")
+#anova.lme(ar1.syn, type = "marginal")
 
 
 #summary(ar1.syn)
+set.caption("RMANOVA table for +Ph Synechococcus")
 pander(anova(ar1.syn))
+
+```
+
+
+```{r}
+ts.abd <- subset(cstat.abd,cstat.abd$microbe == "Syn" & cstat.abd$day > 0)
+ts.abd <- na.omit(ts.abd)
+
+ts.abd$log.abd <- log10(ts.abd$abd)                   #Create a column of log data
+ts.abd$day.fac <- as.factor(ts.abd$day)               #Convert time into a factor
+    
+ar1.syn <- lme(log.abd ~ lim * day.fac * type, random = ~ 1 | cID, 
+            correlation=corAR1(form = ~ 1 | cID),
+            data=ts.abd)
+#summary(ar1.syn)
+#xtable(anova.lme(ar1.syn,type="sequential"))
+#install.packages("multcomp")
+set.caption("RMANOVA table comparison between -Ph and +Ph Synechococcus")
+pander(anova(ar1.syn))  
+
+  
+```
+
+
+```{r}
+ts.abd <- subset(cstat.abd,cstat.abd$type == "Control" & cstat.abd$day > 0)
+ts.abd <- na.omit(ts.abd)
+
+ts.abd$log.abd <- log10(ts.abd$abd)                   #Create a column of log data
+ts.abd$day.fac <- as.factor(ts.abd$day)               #Convert time into a factor
+    
+ar1.syn <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
+            correlation=corAR1(form = ~ 1 | cID),
+            data=ts.abd)
+#summary(ar1.syn)
+#xtable(anova.lme(ar1.syn,type="sequential"), digits = 4)
+set.caption("RMANOVA for -Ph Synechococcus")
+pander(anova(ar1.syn))  
+
 
 ```
 
 \newpage
 
-### Despcriptive statistics
+### Temporal autocorrelation
+
+```{r,echo=FALSE, fig.height=4,fig.width=6}
+sync <- read.csv("./output/cstatabd-stats.csv", header = T)
+sync <- subset(sync, sync$day < 156)
+sync <- na.omit(sync)
+
+#subset data into NL and PL data sets
+syncN <- subset(sync, sync$lim == "N")
+syncP <- subset(sync, sync$lim == "P")
+
+#Creat cross-correlation plots for individual chemostats
+#ccf.cstat <- function(cID=""){
+#    ccf(sync$Syn[sync$cID == cID], sync$Phage[sync$cID == cID], 
+#    lag.max = 8, type = "correlation", 
+#    ylab = "CCF", main = cID, las = 1,
+#    plot = T, ylim = c(-0.5,0.5))
+#}
+
+#par(mfrow = c(2,3))
+#ccf.cstat(cID="NL2"); ccf.cstat(cID="NL3"); ccf.cstat(cID="NL5")
+#ccf.cstat(cID="PL2"); ccf.cstat(cID="PL4"); ccf.cstat(cID="PL5")
+
+par(mfrow = c(1,2))
+ccfN <- ccf(syncN$Syn, syncN$Phage, lag.max = 8, type = "correlation", 
+    ylab = "CCF", main = "N-limited",
+    plot = T, ylim = c(-0.5,0.5))
+#print(ccfN)
+
+ccfP <- ccf(syncP$Syn, syncP$Phage, lag.max = 8, type = "correlation", 
+    ylab = "CCF", main = "P-limited",
+    plot = T, ylim = c(-0.5,0.5))
+#print(ccfP)
+```
+*NOTE*: Cross-correlation analyses and RMANOVA were also completed in SAS
+
+\newpage
+
+
+## Despcriptive statistics
 ```{r}
 #Create function for the standard error of the mean. 
 #The density measurements are based on the average of 10 microscope images.
@@ -868,7 +830,8 @@ pander(table2, split.cells = c(5,10,15,10,15,10),split.tables = Inf)
 
 \newpage
 
-###Topographic statistics
+
+##Topographic statistics
 
 ```{r}
 ts.stab <- function(x){
@@ -926,14 +889,13 @@ top.sort <- ts.top[order(ts.top$microbe),]
 rownames(top.sort)=NULL
 #colnames(top.sort)=c("Limitation Treatment", "Chemostat ID","Microbe","Mean Abundance","Variation", )
 #write.csv(top.sort, file = "./output/ts-topology.csv")
-write.csv(top.sort, file = "./supporting-files/data/ts-topographic-info.csv",row.names = FALSE)
-# --> INSERT TABLE OF RESULTS
-
+#write.csv(top.sort, file = "./supporting-files/data/ts-topographic-info.csv",row.names = FALSE)
+set.caption("Descriptive statistical summary of population data.")
 pander(top.sort)
 #xtable(top.sort)
 ```
 
-```{r}
+```{r, eval=FALSE}
 #subset the data set
 pphage <- subset(top.sort, top.sort$lim == "P" & top.sort$microbe == "Phage")
 nphage <- subset(top.sort, top.sort$lim == "N" & top.sort$microbe == "Phage")
@@ -956,73 +918,11 @@ top.stats[,3] <- round(c(syn.mean[[2]],syn.stab[[2]],phage.mean[[2]],phage.stab[
 top.stats[,4] <- round(c(syn.mean[[3]],syn.stab[[3]],phage.mean[[3]],phage.stab[[3]]), digits = 5)
 
 #top.stats
+set.caption("t-test summary for population mean and stability of +Ph Synechococcus and phage")
 pander(top.stats)
 ```
 
-
-
 \newpage
-
-### Temporal Synchrony
-
-```{r, eval = FALSE}
-ts.syncN <- phase.sync(syncN$Syn,syncN$Phage)
-peaks.N <- peaks(syncN$Syn,syncN$Phage, nrands=100)
-peaks.N
-
-ts.syncP <- phase.sync(syncP$Syn,syncP$Phage)
-peaks.P <- peaks(syncP$Syn,syncP$Phage, nrands=100)
-peaks.P
-```
-
-```{r}
-#reshape data file from long form to columns for syn, phage, and p:s ratio
-
-cstat.abd <- read.csv("./output/cid-means.csv", header = T)
-cstat.reshape <- cstat.abd
-day.num <- day
-cstat.reshape$day <- as.factor(cstat.reshape$day)
-
-m1 <- melt(cstat.reshape, id = c("day","microbe","lim","type", "cID"))
-c1 <- cast(m1, day +lim + type + cID ~ microbe)
-
-#sort data and calculate p:s ratio at same time point
-cstat.reshape <- c1[order(c1$type, c1$cID, c1$day),]
-cstat.reshape$pst1 <- round(cstat.reshape[,5]/cstat.reshape[,6], digits = 2)
-cstat.reshape$day.num <- rep(day.num,10)
-
-#remove control data and truncate syn/phage data between days 0 and 166
-cstat.infect <- subset(cstat.reshape,cstat.reshape$type == "Infect")
-cstat.infect <- cstat.infect[,-3]
-
-cstat.truc <- subset(cstat.infect,cstat.infect$day.num > 0, na.rm = T)
-#write.csv(cstat.truc, file = "./output/cstatabd-stats.csv", row.names = F)
-
-#Create mean and sem data calculations
-sem <- function(x){
-     sd(x)/sqrt(3)
-}
-
-c2 <- cast(m1, day + lim + type ~ microbe, mean)
-cstat.means <- c2[order(c2$lim, c2$type, c2$day),]
-m2 <- melt(cstat.means, id = c("day", "lim", "type"))
-c3 <- cast(m2, day + lim ~ microbe + type)
-cstat.means <- c3[order(c3$lim, c3$day),]
-
-c4 <- cast(m1, day + lim + type ~ microbe, sem)
-m3 <- melt(c4, id = c("day", "lim", "type"))
-c5 <- cast(m3, day + lim ~ microbe + type)
-cstat.sem <- c5[order(c5$lim, c5$day),]
-
-avg.data <- merge(cstat.means,cstat.sem, c("day","lim"))
-avg.data <- avg.data[order(avg.data$lim,avg.data$day),]
-avg.data <- cbind(rep(day,2),avg.data[,2:ncol(avg.data)])
-colnames(avg.data) <- c("day","lim",
-                        "PmeanC","PmeanI","SmeanC","SmeanI",
-                        "PseC","PseI","SseC","SseI")
-#write.csv(avg.data, file = "./output/cstat-means.csv", row.names = F)
-```
-
 
 # Infection Dynamics: Does stoichiometry alter phenotypic (co)evolution in cyanobacteria and phage?
 
