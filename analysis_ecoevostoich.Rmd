@@ -643,7 +643,7 @@ phage <- subset(ts.abd,ts.abd$microbe == "Phage")
 syn <- subset(ts.abd,ts.abd$microbe == "Syn")
 
 # Phage
-ar1.phage <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
+ar1.phage <- lme(log.abd ~ lim * day, random = ~ 1 | cID, 
             correlation=corAR1(form = ~ 1 | cID),
             data=phage)
 #xtable(anova.lme(ar1.phage, type = "marginal"))
@@ -653,10 +653,10 @@ set.caption("RMANOVA table for SRIM8 phage")
 pander(anova(ar1.phage))
 
 #Syn
-ar1.syn <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
+ar1.syn <- lme(log.abd ~ lim * day, random = ~ 1 | cID, 
             correlation=corAR1(form = ~ 1 | cID),
             data=syn)
-#anova.lme(ar1.syn, type = "marginal")
+anova.lme(ar1.syn, type = "marginal")
 
 
 #summary(ar1.syn)
@@ -1095,7 +1095,7 @@ print(p)
 
 ```{r NL_controls_dof}
 #Initialize data storage
-lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c()
+lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c();b.cid.list <- c()
 
 r = 1
 l = 0
@@ -1105,6 +1105,7 @@ res4 <- subset(res4,P.cID !="RIM8-1")
 res4 <- subset(res4,B.cID !="WH7803")
 res4 <- subset(res4,B.cID !="WH8101")
 
+# Subsetting by phage chemostat ID
 cID = c("N2","N3","N5")
   
 for(i in cID){
@@ -1131,6 +1132,7 @@ for(i in cID){
   l <- r + length(m3[,1])
   
   cid.list <- append(cid.list,rep(as.character(i),length(m3[,1])))
+  b.cid.list <- append(b.cid.list,rep(as.character(unique(res4b$B.cID)),length(m3[,1])))
   phage.time <- append(phage.time,m3$P.daynumber)
   bac.time <- append(bac.time,m3$B.daynumber)
   inf.prob <- append(inf.prob, m3$value)
@@ -1138,12 +1140,12 @@ for(i in cID){
   }
 
 
-bor.cstat.Ncontrol <- data.frame(cid.list,phage.time,bac.time,inf.prob)
+bor.cstat.Ncontrol <- data.frame(b.cid.list,cid.list,phage.time,bac.time,inf.prob)
 ```
 
 ```{r NL_coevo_dof}
 #Initialize data storage
-lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c()
+lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c();b.cid.list <- c()
 
 r = 1
 l = 0
@@ -1178,19 +1180,20 @@ for(i in cID){
   l <- r + length(m3[,1])
   
   cid.list <- append(cid.list,rep(as.character(i),length(m3[,1])))
+  b.cid.list <- append(b.cid.list,rep(as.character(unique(res4b$B.cID)),length(m3[,1])))
   phage.time <- append(phage.time,m3$P.daynumber)
   bac.time <- append(bac.time,m3$B.daynumber)
   inf.prob <- append(inf.prob, m3$value)
   
   }
 
-bor.cstat.Ncoevo <- data.frame(cid.list,phage.time,bac.time,inf.prob)
+bor.cstat.Ncoevo <- data.frame(b.cid.list, cid.list,phage.time,bac.time,inf.prob)
 
 ```
 
 ```{r PL_control_dof}
 #Initialize data storage
-lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c()
+lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c();b.cid.list <- c()
 
 r = 1
 l = 0
@@ -1226,6 +1229,7 @@ for(i in cID){
   l <- r + length(m3[,1])
   
   cid.list <- append(cid.list,rep(as.character(i),length(m3[,1])))
+  b.cid.list <- append(b.cid.list,rep(as.character(unique(res4b$B.cID)),length(m3[,1])))
   phage.time <- append(phage.time,m3$P.daynumber)
   bac.time <- append(bac.time,m3$B.daynumber)
   inf.prob <- append(inf.prob, m3$value)
@@ -1233,12 +1237,12 @@ for(i in cID){
   }
 
 
-bor.cstat.Pcontrol <- data.frame(cid.list,phage.time,bac.time,inf.prob)
+bor.cstat.Pcontrol <- data.frame(b.cid.list, cid.list,phage.time,bac.time,inf.prob)
 ```
 
 ```{r PL_coevo_dof}
 #Initialize data storage
-lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c()
+lim.list <- c(); cid.list <- c(); phage.time <- c(); bac.time <- c(); inf.prob <- c();b.cid.list <- c()
 
 r = 1
 l = 0
@@ -1273,13 +1277,14 @@ for(i in cID){
   l <- r + length(m3[,1])
   
   cid.list <- append(cid.list,rep(as.character(i),length(m3[,1])))
+  b.cid.list <- append(b.cid.list,rep(as.character(unique(res4b$B.cID)),length(m3[,1])))
   phage.time <- append(phage.time,m3$P.daynumber)
   bac.time <- append(bac.time,m3$B.daynumber)
   inf.prob <- append(inf.prob, m3$value)
   
   }
 
-bor.cstat.Pcoevo <- data.frame(cid.list,phage.time,bac.time,inf.prob)
+bor.cstat.Pcoevo <- data.frame(b.cid.list, cid.list,phage.time,bac.time,inf.prob)
 
 ```
 
@@ -1301,9 +1306,266 @@ bor.cstat.Pcoevo$trt <- rep("T", length(bor.cstat.Pcoevo[,1]))
 bor.cstat.Pcoevo$lim <- rep("P", length(bor.cstat.Pcoevo[,1]))
 
 bor.cstat <- rbind(bor.cstat.Ncontrol, bor.cstat.Ncoevo, bor.cstat.Pcontrol, bor.cstat.Pcoevo)
-colnames(bor.cstat) <- c("cID","phage.time","bac.time","inf.prob","trt","lim")
+colnames(bor.cstat) <- c("BcID","cID","phage.time","bac.time","inf.prob","trt","lim")
 
 ```
+
+```{r fig.height = 5, fig.width = 5}
+bor.cstat$ptime.adj <- bor.cstat$phage.time
+bor.cstat$btime.adj <- bor.cstat$bac.time
+
+bor.cstat$btime.adj[bor.cstat$btime.adj == -6] <- 1
+bor.cstat$btime.adj[bor.cstat$btime.adj == 9] <- 2
+bor.cstat$btime.adj[bor.cstat$btime.adj == 23] <- 3
+bor.cstat$btime.adj[bor.cstat$btime.adj == 72] <- 4
+bor.cstat$btime.adj[bor.cstat$btime.adj == 100] <- 5
+bor.cstat$btime.adj[bor.cstat$btime.adj == 129] <- 6
+bor.cstat$btime.adj[bor.cstat$btime.adj == 166] <- 7
+bor.cstat$ptime.adj[bor.cstat$ptime.adj == 9] <- 2
+bor.cstat$ptime.adj[bor.cstat$ptime.adj == 23] <- 3
+bor.cstat$ptime.adj[bor.cstat$ptime.adj == 72] <- 4
+bor.cstat$ptime.adj[bor.cstat$ptime.adj == 129] <- 6
+bor.cstat$ptime.adj[bor.cstat$ptime.adj == 166] <- 7
+
+bor.cstat$time.shift <- bor.cstat$phage.time-bor.cstat$bac.time
+bor.cstat$bac.time.fac <- as.factor(bor.cstat$bac.time)
+bor.cstat$p.time.shift <- bor.cstat$btime.adj-bor.cstat$ptime.adj
+bor.cstat$phage.time.fac <- as.factor(bor.cstat$phage.time)
+
+
+facet_names <- list(
+  'N'="N-limited",
+  'P'="P-limited",
+  'C'="Non-phage amended control",
+  'T'="Phage amended"
+)
+
+facet_labeller <- function(variable,value){
+  return(facet_names[value])
+}
+
+
+# Time shift by time point
+p <- ggplot(bor.cstat, aes(x = time.shift, y = inf.prob, col = bac.time.fac)) +
+  #geom_point()+
+#  geom_point(bor.cstat[bor.cstat$time.shift == 0,], aes(x = time.shift, y = inf.prob),
+#             col = "black",size = 1.25) +
+  #annotate("text", x = label = bac.time.fac) +
+  stat_summary(fun.y = mean,geom="line")+
+  facet_grid(trt~lim, labeller=facet_labeller)+
+  xlab("Time Shift (days) relative to host") +
+  ylab("Interaction Strength") +
+  theme_bw()+
+  theme(legend.position='none',
+        axis.text.x  = element_text(size=10),
+        axis.text.y  = element_text(size=10),
+        axis.title.x = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        axis.title.y = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        panel.grid = element_blank(),
+        strip.background = element_rect(fill="white"))
+print(p)
+
+
+ggsave("./supporting-files/time_shift.tif", p, device = "tiff", 
+       scale = 1, width = 6, height = 4, units = "in", dpi = 300)
+
+
+p1 <- ggplot(bor.cstat, aes(x = time.shift, y = inf.prob)) +
+  geom_point(aes(col = bac.time.fac)) + 
+  #stat_summary(fun.y = mean, geom="line")+
+  facet_grid(trt~lim)+
+  stat_smooth(geom = "smooth", method = "loess")
+
+p2 <- ggplot(bor.cstat, aes(x = p.time.shift, y = inf.prob, col = phage.time.fac)) +
+  geom_point() + stat_summary(fun.y = mean, geom="line")+
+  facet_grid(trt~lim)
+
+p3 <- ggplot(bor.cstat, aes(x = p.time.shift, y = inf.prob)) +
+  geom_point(aes(col = phage.time.fac)) + stat_summary(fun.y = mean, geom="line")+
+  facet_grid(trt~lim)
+
+
+#Run RMANOVA with different models
+model.ar <- lme(inf.prob ~ trt * lim * time.shift, random = ~1 | BcID,
+                 correlation = corAR1(form = ~1 ),
+                 data = bor.cstat)
+
+model.arma <- lme(inf.prob ~ trt* lim * time.shift,random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 1),
+                 data = bor.cstat)
+
+model.arma1 <- lme(inf.prob ~ trt* lim * time.shift, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat)
+
+#Select which model fits the data better
+#anova(model.ar,model.arma, model.arma1)
+pander(summary(model.arma1))
+```
+
+\newpage
+```{r fig.height = 5, fig.width = 5}
+
+b.type.func <- function(x,y){
+  if(y < x){
+    type <- "P"
+    } else if(y == x){
+      type <- "C"
+      } else {
+        type <- "F"
+      }
+  return(type)
+  }
+
+bor.cstat$b.type <- mapply(b.type.func,bor.cstat$bac.time,bor.cstat$phage.time)
+bor.cstat$p.type <- mapply(b.type.func,bor.cstat$phage.time, bor.cstat$bac.time)
+
+# cyano time
+p4 <- ggplot(bor.cstat, aes(x = as.factor(bac.time), inf.prob)) +
+  geom_point(aes(shape = as.factor(phage.time), color = BcID)) +
+  stat_summary(fun.data = "mean_cl_boot", col = "black", size = 0.75) + 
+  facet_grid(trt~lim) +
+    theme_bw()+
+  theme(legend.position='none',
+        axis.text.x  = element_text(size=10),
+        axis.text.y  = element_text(size=10),
+        axis.title.x = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        axis.title.y = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        panel.grid = element_blank()) +
+  xlab("Synechococcus Isolation Time (d)") +
+  ylab("Interaction Strength")
+
+print(p4)
+
+ggsave("./supporting-files/cyano_time.tif", p4, device = "tiff", 
+      scale = 1, width = 6, height = 4, units = "in", dpi = 300)
+
+fit <- aov(inf.prob ~ bac.time.fac * lim * trt, data = bor.cstat)
+summary(fit)
+TukeyHSD(fit)
+
+fit <- aov(inf.prob ~ bac.time.fac * lim, data = bor.cstat[bor.cstat$trt == "C",])
+summary(fit)
+TukeyHSD(fit)
+
+
+model.ar <- lme(inf.prob ~ trt * lim * bac.time, random = ~1 | BcID,
+                 correlation = corAR1(form = ~1 ),
+                 data = bor.cstat)
+
+model.arma <- lme(inf.prob ~ trt* lim *  bac.time,random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 1),
+                 data = bor.cstat)
+
+model.arma1 <- lme(inf.prob ~ trt* lim * bac.time, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat)
+
+#Select which model fits the data better
+#anova(model.ar,model.arma, model.arma1)
+pander(summary(model.arma1))
+
+model.arma1T <- lme(inf.prob ~ lim * bac.time, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat[bor.cstat$trt == "T",])
+pander(summary(model.arma1T))
+stats = anova.lme(model.arma1P,type = "sequential", adjustSigma = F)
+
+model.arma1C <- lme(inf.prob ~ lim * bac.time, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat[bor.cstat$trt == "C",])
+pander(summary(model.arma1C))
+
+model.arma1N <- lme(inf.prob ~ trt * bac.time, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat[bor.cstat$lim == "N",])
+pander(summary(model.arma1N))
+
+model.arma1P <- lme(inf.prob ~ trt * bac.time, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat[bor.cstat$lim == "P",])
+pander(summary(model.arma1P))
+
+
+```
+
+\newpage
+
+```{r fig.height = 5, fig.width = 5}
+
+#phage time
+
+p5 <- ggplot(bor.cstat, aes(x = as.factor(phage.time), inf.prob)) +
+  geom_point(aes(shape = as.factor(phage.time), color = BcID)) +
+  stat_summary(fun.data = "mean_cl_boot", col = "black", size = 0.75) + 
+  facet_grid(trt~lim) +
+    theme_bw()+
+  theme(legend.position='none',
+        axis.text.x  = element_text(size=10),
+        axis.text.y  = element_text(size=10),
+        axis.title.x = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        axis.title.y = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        panel.grid = element_blank()) +
+  xlab("Phage Isolation Time (d)") +
+  ylab("Interaction Strength")
+
+ggsave("./supporting-files/phage_time.tif", p5, device = "tiff", 
+      scale = 1, width = 6, height = 4, units = "in", dpi = 300)
+
+aggregate(inf.prob ~ trt + lim + phage.time, data = bor.cstat, mean)
+
+model.arma1 <- lme(inf.prob ~ trt* lim * phage.time, random = ~1 | BcID,
+                 correlation = corARMA(form = ~1, p = 1, q = 2),
+                 data = bor.cstat)
+summary(model.arma1)
+
+p <- ggplot(bor.cstat, aes(x = b.type, inf.prob)) +
+  geom_boxplot(aes(fill = bac.time.fac)) +
+  facet_grid(trt~lim)
+
+p$data$b.type <- factor(p$data$b.type, levels = c("P","C","F"))
+p$data$bac.time <- factor(p$data$bac.time, levels = c("-6","9","23","72","100","129","166"))
+#print(p)
+
+
+p <- ggplot(bor.cstat, aes(x = bac.time.fac, inf.prob)) +
+  geom_boxplot(aes(fill = b.type), size = 1) +
+  facet_grid(trt~lim)
+
+p$data$b.type <- factor(p$data$b.type, levels = c("P","C","F"))
+p$data$bac.time <- factor(p$data$bac.time, levels = c("-6","9","23","72","100","129","166"))
+#print(p)
+
+# Bact coevol model
+p <- ggplot(bor.cstat, aes(x = b.type, inf.prob)) +
+  geom_boxplot() +
+  facet_grid(trt~lim) +
+  xlab("Bacteria Time") +
+  ylab("Interaction Strength")
+p$data$b.type <- factor(p$data$b.type, levels = c("P","C","F"))
+#print(p)
+
+# Phage coevol model
+p1 <- ggplot(bor.cstat, aes(x = p.type, inf.prob)) +
+  geom_boxplot() +
+  facet_grid(trt~lim) +
+  xlab("Phage Time") +
+  ylab("Interaction Strength")
+p1$data$p.type <- factor(p1$data$p.type, levels = c("P","C","F")) 
+#print(p1)
+
+grid.arrange(p,p1, ncol = 2)
+
+aggregate(inf.prob ~ trt + lim * bac.time, data = bor.cstat, sd)
+
+```
+
 
 ```{r, include = FALSE, eval=FALSE}
 #res4 <- read.csv("./output/20150707_bor-processed.csv", header = T)
@@ -1419,7 +1681,9 @@ colnames(bor.cstat.trt) <- c("lim","phage.time","bac.time","inf.prob","trt")
 #head(bor.cstat)
 ```
 
-## RMANOVA
+\newpage
+
+## RMANOVA for Interaction Strengths
 ```{r dof-stats}
 #str(bor.cstat)
 bor.stat <- bor.cstat
@@ -1487,9 +1751,10 @@ model.arma1 <- lme(inf.prob ~ trt* lim * phage.time * bac.time, random = ~1,
 #Select which model fits the data better
 anova(model.ar,model.arma, model.arma1)
 
-summary(model.arma1)
-anova(model.arma1)
-
+#summary(model.arma1)
+#anova(model.arma1)
+set.caption("RMANOVA table for infection data")
+pander(model.arma1)
 #phage.time*lim; p = 0.001
 #phage.time*bac.time; p = 0.0029
 #lim*phage.time*bac.time; p = 0.0085
@@ -1670,7 +1935,7 @@ box(lwd = 3)
 # construct and populate adjacency matrix
 size <- 1*dim(Pcon)[[1]] + 2*dim(Ptrt)[[2]]
 mat <- matrix(0, nrow = size, ncol = size)
-mat
+#mat
 
 # for multiple bacteria, single phage 
 mat[1:dim(Pcon)[[1]],I(dim(Pcon)[[1]]+1):I(dim(Pcon)[[1]] + dim(Pcon)[[2]])] <- as.matrix(Ptrt)
@@ -1701,7 +1966,7 @@ plot(g2,
      vertex.color = c(rep(phage.color,length(phage.time)),
                       rep(bac.color,length(bacteria.time)/2),
                       rep(bac.color2,length(bacteria.time)/2)),
-     edge.color = "black",edge.width = 8*wts,
+     edge.color = "grey25",edge.width = 8*wts,
      edge.arrow.mode = 0,layout = locs,
      xlab = list("Time (d)", cex = 1.5, font = 2),
      asp = 0,ylim = c(-1.2,1))
