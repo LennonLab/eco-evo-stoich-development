@@ -13,7 +13,6 @@
     \usepackage{fontspec}
   \fi
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-  \newcommand{\euro}{€}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -24,7 +23,6 @@
 }{}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
             pdftitle={Statistical analysis},
             pdfborder={0 0 0},
@@ -40,12 +38,25 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
 
 %%% Use protect on footnotes to avoid problems with footnotes in titles
 \let\rmarkdownfootnote\footnote%
@@ -70,17 +81,6 @@
   \date{}
   \predate{}\postdate{}
 
-
-
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
 
 \begin{document}
 \maketitle
@@ -173,82 +173,62 @@ controls (C) did not contain additional N or P.}
 \caption{ANOVA table for NL nutrient addition}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.19\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.06\columnwidth}\centering\strut
-Df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-Sum Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Mean Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Pr(\textgreater{}F)
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+Df\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Sum Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Mean Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Pr(\textgreater{}F)\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.19\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.06\columnwidth}\centering\strut
-Df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-Sum Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Mean Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Pr(\textgreater{}F)
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+Df\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Sum Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Mean Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Pr(\textgreater{}F)\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.19\columnwidth}\centering\strut
-\textbf{med.add}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.06\columnwidth}\centering\strut
-3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-0.08993
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.02998
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-33.3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.743e-10
-\strut\end{minipage}\tabularnewline
+\textbf{med.add}\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.08993\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.02998\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+33.3\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.743e-10\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.19\columnwidth}\centering\strut
-\textbf{Residuals}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.06\columnwidth}\centering\strut
-36
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-0.0324
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.0009001
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+\textbf{Residuals}\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+36\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.0324\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.0009001\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -256,130 +236,98 @@ NA
 \caption{Posthoc comparisons using Tukey HSD}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-diff
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-lwr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-upr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-p adj
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+diff\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+lwr\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+upr\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+p adj\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-diff
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-lwr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-upr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-p adj
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+diff\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+lwr\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+upr\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+p adj\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{N-C}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.0929}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.05677}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.129}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{2.426e-07}
-\strut\end{minipage}\tabularnewline
+\textbf{N-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0929}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.05677}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.129}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{2.426e-07}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{NP-C}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.1218}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.0857}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.158}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{4.542e-10}
-\strut\end{minipage}\tabularnewline
+\textbf{NP-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.1218}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0857}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.158}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{4.542e-10}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{P-C}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.03716}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.001027}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.0733}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.04188}
-\strut\end{minipage}\tabularnewline
+\textbf{P-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.03716}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.001027}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.0733}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.04188}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{NP-N}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.02893
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
--0.007204
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.06507
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.1551
-\strut\end{minipage}\tabularnewline
+\textbf{NP-N}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.02893\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+-0.007204\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.06507\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.1551\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{P-N}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{-0.05574}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{-0.09188}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{-0.01961}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.001056}
-\strut\end{minipage}\tabularnewline
+\textbf{P-N}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.05574}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.09188}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.01961}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.001056}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{P-NP}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{-0.08467}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{-0.1208}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{-0.04854}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{1.564e-06}
-\strut\end{minipage}\tabularnewline
+\textbf{P-NP}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.08467}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.1208}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{-0.04854}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{1.564e-06}\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -389,82 +337,62 @@ p adj
 \caption{ANOVA table for PL nutrient addition}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.19\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.06\columnwidth}\centering\strut
-Df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-Sum Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Mean Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Pr(\textgreater{}F)
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+Df\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Sum Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Mean Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Pr(\textgreater{}F)\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.19\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.06\columnwidth}\centering\strut
-Df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-Sum Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Mean Sq
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Pr(\textgreater{}F)
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+Df\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Sum Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Mean Sq\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Pr(\textgreater{}F)\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.19\columnwidth}\centering\strut
-\textbf{med.add}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.06\columnwidth}\centering\strut
-3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-0.01865
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.006215
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.845
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.05117
-\strut\end{minipage}\tabularnewline
+\textbf{med.add}\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.01865\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.006215\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.845\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.05117\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.19\columnwidth}\centering\strut
-\textbf{Residuals}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.06\columnwidth}\centering\strut
-36
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-0.07864
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.002184
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+\textbf{Residuals}\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+36\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+0.07864\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.002184\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -472,130 +400,98 @@ NA
 \caption{Posthoc comparisons using Tukey HSD}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.14\columnwidth}\centering\strut
-diff
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-lwr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.13\columnwidth}\centering\strut
-upr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.13\columnwidth}\centering\strut
-p adj
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering\strut
+diff\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+lwr\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+upr\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+p adj\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.13\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.14\columnwidth}\centering\strut
-diff
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-lwr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.13\columnwidth}\centering\strut
-upr
-\strut\end{minipage} &
-\begin{minipage}[b]{0.13\columnwidth}\centering\strut
-p adj
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering\strut
+diff\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+lwr\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+upr\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+p adj\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{N-C}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\centering\strut
-0.02548
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
--0.03081
-\strut\end{minipage} &
+\textbf{N-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.02548\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+-0.03081\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.08178\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.619\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.08178
-\strut\end{minipage} &
+\textbf{NP-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.04166\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+-0.01463\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.09796\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.2094\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.619
-\strut\end{minipage}\tabularnewline
+\textbf{P-C}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{0.05857}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+\textbf{0.002277}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{0.1149}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+\textbf{0.03881}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{NP-C}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\centering\strut
-0.04166
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
--0.01463
-\strut\end{minipage} &
+\textbf{NP-N}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.01618\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+-0.04011\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.07247\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.8656\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.09796
-\strut\end{minipage} &
+\textbf{P-N}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.03309\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+-0.02321\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.08938\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.4008\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.2094
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{P-C}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\centering\strut
-\textbf{0.05857}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-\textbf{0.002277}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{0.1149}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{0.03881}
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{NP-N}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\centering\strut
-0.01618
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
--0.04011
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.07247
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.8656
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{P-N}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\centering\strut
-0.03309
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
--0.02321
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.08938
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.4008
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-\textbf{P-NP}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\centering\strut
-0.01691
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
--0.03939
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.0732
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\centering\strut
-0.8498
-\strut\end{minipage}\tabularnewline
+\textbf{P-NP}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.01691\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+-0.03939\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.0732\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.8498\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -621,46 +517,37 @@ tables}\label{growth-rate-t-test-tables}
 \caption{t-test table for NL nutrient addition}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-Test statistic
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-P value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.30\columnwidth}\centering\strut
-Alternative hypothesis
-\strut\end{minipage}\tabularnewline
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+P value\strut
+\end{minipage} & \begin{minipage}[b]{0.30\columnwidth}\centering\strut
+Alternative hypothesis\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-Test statistic
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-P value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.30\columnwidth}\centering\strut
-Alternative hypothesis
-\strut\end{minipage}\tabularnewline
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+P value\strut
+\end{minipage} & \begin{minipage}[b]{0.30\columnwidth}\centering\strut
+Alternative hypothesis\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-4.546
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-6.271
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.001749 * *
-\strut\end{minipage} &
-\begin{minipage}[t]{0.30\columnwidth}\centering\strut
-greater
-\strut\end{minipage}\tabularnewline
+4.546\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+6.271\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.001749 * *\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering\strut
+greater\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -670,46 +557,37 @@ greater
 \caption{t-test table for PL nutrient addition}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-Test statistic
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-P value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.30\columnwidth}\centering\strut
-Alternative hypothesis
-\strut\end{minipage}\tabularnewline
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+P value\strut
+\end{minipage} & \begin{minipage}[b]{0.30\columnwidth}\centering\strut
+Alternative hypothesis\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-Test statistic
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-P value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.30\columnwidth}\centering\strut
-Alternative hypothesis
-\strut\end{minipage}\tabularnewline
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+P value\strut
+\end{minipage} & \begin{minipage}[b]{0.30\columnwidth}\centering\strut
+Alternative hypothesis\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-1.432
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-6.442
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.09939
-\strut\end{minipage} &
-\begin{minipage}[t]{0.30\columnwidth}\centering\strut
-greater
-\strut\end{minipage}\tabularnewline
+1.432\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+6.442\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.09939\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering\strut
+greater\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -810,100 +688,76 @@ chemostat system.}
 \caption{RMANOVA table for SRIM8 phage}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-230
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-14010
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+230\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+14010\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{lim}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.3592
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.5812
-\strut\end{minipage}\tabularnewline
+\textbf{lim}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.3592\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5812\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-58
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-230
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-10.22
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+58\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+230\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+10.22\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{lim:day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-58
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-230
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.588
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.771e-07
-\strut\end{minipage}\tabularnewline
+\textbf{lim:day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+58\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+230\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.588\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.771e-07\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -911,100 +765,76 @@ p-value
 \caption{RMANOVA table for +Ph Synechococcus}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-245
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-12432
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+245\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+12432\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{lim}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.5225
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.5098
-\strut\end{minipage}\tabularnewline
+\textbf{lim}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5225\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5098\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-245
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-3.354
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.14e-11
-\strut\end{minipage}\tabularnewline
+\textbf{day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+245\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+3.354\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.14e-11\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{lim:day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-245
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.437
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-6.993e-07
-\strut\end{minipage}\tabularnewline
+\textbf{lim:day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+245\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.437\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+6.993e-07\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1013,160 +843,120 @@ p-value
 Synechococcus}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.27\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.27\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-305
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-19415
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+305\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+19415\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{lim}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-5
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.002236
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.9641
-\strut\end{minipage}\tabularnewline
+\textbf{lim}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.002236\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.9641\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-305
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.87
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.107e-09
-\strut\end{minipage}\tabularnewline
+\textbf{day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+305\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.87\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.107e-09\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{type}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-5
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-8.787
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.03136
-\strut\end{minipage}\tabularnewline
+\textbf{type}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+8.787\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.03136\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{lim:day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-305
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.354
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-8.796e-07
-\strut\end{minipage}\tabularnewline
+\textbf{lim:day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+305\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.354\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+8.796e-07\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{lim:type}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-5
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.3204
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.5958
-\strut\end{minipage}\tabularnewline
+\textbf{lim:type}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.3204\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5958\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{day.fac:type}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-305
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.244
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.1198
-\strut\end{minipage}\tabularnewline
+\textbf{day.fac:type}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+305\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.244\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.1198\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.27\columnwidth}\centering\strut
-\textbf{lim:day.fac:type}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-305
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.121
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.2639
-\strut\end{minipage}\tabularnewline
+\textbf{lim:day.fac:type}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+305\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.121\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.2639\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1174,100 +964,76 @@ p-value
 \caption{RMANOVA for -Ph Synechococcus}\tabularnewline
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-60
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1629
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+60\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1629\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{lim}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.01077
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.9342
-\strut\end{minipage}\tabularnewline
+\textbf{lim}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.01077\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.9342\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-60
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.9176
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.6315
-\strut\end{minipage}\tabularnewline
+\textbf{day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+60\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.9176\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.6315\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{lim:day.fac}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-62
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-60
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.9089
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.6454
-\strut\end{minipage}\tabularnewline
+\textbf{lim:day.fac}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+62\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+60\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.9089\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.6454\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1286,525 +1052,385 @@ in SAS
 \begin{longtable}[]{@{}cccccc@{}}
 \toprule
 \begin{minipage}[b]{0.07\columnwidth}\centering\strut
-lim
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-cID
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-microbe
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-mean
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-var
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-sem
-\strut\end{minipage}\tabularnewline
+lim\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+cID\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+microbe\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+mean\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+var\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+sem\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-N
-\strut\end{minipage} &
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NL1\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Syn\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+13134483\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+4.093e+13\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+3693536\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NL1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Syn
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-13134483
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-4.093e+13
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-3693536
-\strut\end{minipage}\tabularnewline
+P\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+PL1\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Syn\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+25428955\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+3.159e+14\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+10261999\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-P
-\strut\end{minipage} &
+P\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+PL3\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Syn\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+9864044\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+4.838e+13\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+4015664\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-PL1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Syn
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-25428955
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-3.159e+14
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-10261999
-\strut\end{minipage}\tabularnewline
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-P
-\strut\end{minipage} &
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-PL3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Syn
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-9864044
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-4.838e+13
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-4015664
-\strut\end{minipage}\tabularnewline
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \toprule
 \begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Limitation
-\strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
-Treatment
-\strut\end{minipage} &
-\begin{minipage}[b]{0.15\columnwidth}\centering\strut
-Synechococcus mean densitiy (+/- SEM)
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-Synechococcus mean stability
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-Phage mean density (+/- SEM)
-\strut\end{minipage} &
-\begin{minipage}[b]{0.11\columnwidth}\centering\strut
-Phage mean stability
-\strut\end{minipage}\tabularnewline
+Limitation\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Treatment\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+Synechococcus mean densitiy (+/- SEM)\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+Synechococcus mean stability\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+Phage mean density (+/- SEM)\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Phage mean stability\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-N
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-Control
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-1.3e+07(4e+06)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-2.1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-NaN(NA)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+Control\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+1.3e+07(4e+06)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+2.1\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+NaN(NA)\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-N
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-1.7e+07(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.75
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-2.5e+08(1.4e+08)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-1
-\strut\end{minipage}\tabularnewline
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+1.7e+07(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.75\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+2.5e+08(1.4e+08)\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+1\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-P
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-Control
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-1.8e+07(9e+06)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-NaN(NA)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+P\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+Control\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+1.8e+07(9e+06)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.1\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+NaN(NA)\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-P
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-1.1e+07(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.59
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-2.4e+08(9.5e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.11\columnwidth}\centering\strut
-1.5
-\strut\end{minipage}\tabularnewline
+P\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+1.1e+07(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.59\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+2.4e+08(9.5e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+1.5\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \toprule
 \begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Chemostat
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Treatment
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-Synechococcus mean densitiy (+/- SEM)
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\centering\strut
-Synechococcus mean stability
-\strut\end{minipage} &
-\begin{minipage}[b]{0.17\columnwidth}\centering\strut
-Phage mean density (+/- SEM)
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-Phage mean stability
-\strut\end{minipage}\tabularnewline
+Chemostat\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Treatment\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+Synechococcus mean densitiy (+/- SEM)\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering\strut
+Synechococcus mean stability\strut
+\end{minipage} & \begin{minipage}[b]{0.17\columnwidth}\centering\strut
+Phage mean density (+/- SEM)\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Phage mean stability\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NL1
-\strut\end{minipage} &
+NL1\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Control\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.3e+07(4e+06)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+2.1\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+NaN(NA)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Control
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.3e+07(4e+06)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-2.1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-NaN(NA)
-\strut\end{minipage} &
+NL2\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.8e+07(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.84\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+1.5e+08(7.9e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.1\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+NL3\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.6e+07(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.93\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+2.9e+08(1.5e+08)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.2\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NL2
-\strut\end{minipage} &
+NL5\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.7e+07(2e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.59\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+3.1e+08(1.6e+08)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.1\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.8e+07(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.84
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-1.5e+08(7.9e+07)
-\strut\end{minipage} &
+PL1\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Control\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+2.5e+07(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.4\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+NaN(NA)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.1
-\strut\end{minipage}\tabularnewline
+PL2\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.3e+07(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.52\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+1.6e+08(5.9e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.6\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NL3
-\strut\end{minipage} &
+PL3\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Control\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+9864044(4e+06)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.4\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+NaN(NA)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.6e+07(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.93
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-2.9e+08(1.5e+08)
-\strut\end{minipage} &
+PL4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+1.1e+07(7e+06)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.94\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+2.4e+08(8.8e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.6\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.2
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NL5
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.7e+07(2e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.59
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-3.1e+08(1.6e+08)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.1
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-PL1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Control
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-2.5e+07(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-NaN(NA)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-PL2
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.3e+07(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.52
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-1.6e+08(5.9e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.6
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-PL3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Control
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-9864044(4e+06)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-NaN(NA)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-PL4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-1.1e+07(7e+06)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.94
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-2.4e+08(8.8e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.6
-\strut\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-PL5
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-Infect
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-9399556(1e+07)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\centering\strut
-0.52
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\centering\strut
-3.1e+08(1.1e+08)
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.6
-\strut\end{minipage}\tabularnewline
+PL5\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+Infect\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+9399556(1e+07)\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering\strut
+0.52\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+3.1e+08(1.1e+08)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.6\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1817,49 +1443,38 @@ Infect
 below)}\tabularnewline
 \toprule
 \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
-\textbf{lim}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
-\textbf{cID}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-\textbf{microbe}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
-\textbf{mean}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
-\textbf{var}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
-\textbf{sem}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
-\textbf{stab}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
-\textbf{start.abd}
-\strut\end{minipage}\tabularnewline
+\textbf{lim}\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\textbf{cID}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{microbe}\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\textbf{mean}\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\textbf{var}\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\raggedright\strut
+\textbf{sem}\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\textbf{stab}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
+\textbf{start.abd}\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule
 \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-\textbf{final.abd}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
-\textbf{min.day}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
-\textbf{min.abd}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
-\textbf{max.day}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
-\textbf{max.abd}
-\strut\end{minipage}\tabularnewline
+\textbf{final.abd}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
+\textbf{min.day}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
+\textbf{min.abd}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
+\textbf{max.day}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\raggedright\strut
+\textbf{max.abd}\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1896,295 +1511,811 @@ network-based metrics.
 
 \subsection{Degree of interaction}\label{degree-of-interaction}
 
-\subsection{RMANOVA}\label{rmanova}
+\subsection{\texorpdfstring{\protect\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-18-1.pdf}}{}}\label{section}
+
+\begin{longtable}[]{@{}cccccc@{}}
+\toprule
+~ & Value & Std.Error & DF & t-value & p-value\tabularnewline
+\midrule
+\endhead
+\textbf{(Intercept)} & 0.6284 & 0.03853 & 890 & 16.31 &
+1.635e-52\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+     **trtT**           -0.4375     0.04353    5    -10.05   0.0001667
+
+     **limP**           -0.2763     0.04541    5    -6.084   0.001735 
+
+  **time.shift**       -0.0008488  0.0003838  890   -2.211    0.02726 
+
+  **trtT:limP**          0.2379     0.05345    5     4.45    0.006701 
+\end{verbatim}
+
+\textbf{trtT:time.shift} 0.002118 0.0004238 890 4.997 7.002e-07
+
+\textbf{limP:time.shift} 0.001718 0.0004391 890 3.912 9.853e-05
+
+\subsection{\texorpdfstring{\textbf{trtT:limP:time.shift} -0.001685
+0.0005044 890 -3.341
+0.0008681}{trtT:limP:time.shift -0.001685 0.0005044 890 -3.341 0.0008681}}\label{trttlimptime.shift--0.001685-0.0005044-890--3.341-0.0008681}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Fixed effects: inf.prob \textasciitilde{} trt * lim *
+time.shift}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.08\columnwidth}\centering\strut
+-2.277\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-0.7172\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-0.2124\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+0.573\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+2.662\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccc@{}}
+\caption{Standardized Within-Group Residuals}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{BcID}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+903\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+9\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
+-91.97\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+Table: Linear mixed-effects model fit by REML : inf.prob
+\textasciitilde{} trt * lim * time.shift
+
+\newpage
+
+\subsection{\texorpdfstring{\protect\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-19-1.pdf}}{}}\label{section-1}
+
+\begin{longtable}[]{@{}cccccc@{}}
+\toprule
+~ & Value & Std.Error & DF & t-value & p-value\tabularnewline
+\midrule
+\endhead
+\textbf{(Intercept)} & 0.6579 & 0.04939 & 890 & 13.32 &
+4.78e-37\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+    **trtT**          -0.2326     0.05573    5    -4.174   0.008707 
+
+    **limP**          -0.2052     0.05857    5    -3.503    0.01723 
+
+  **bac.time**       -0.0008318  0.0006544  890   -1.271     0.204  
+
+ **trtT:limP**         0.1294     0.06874    5     1.882    0.1185  
+\end{verbatim}
+
+\textbf{trtT:bac.time} -0.002442 0.0007039 890 -3.469 0.0005475
+
+\textbf{limP:bac.time} -0.0004828 0.0007306 890 -0.6608 0.5089
+
+\subsection{\texorpdfstring{\textbf{trtT:limP:bac.time} 0.00113
+0.0008153 890 1.386
+0.1662}{trtT:limP:bac.time 0.00113 0.0008153 890 1.386 0.1662}}\label{trttlimpbac.time-0.00113-0.0008153-890-1.386-0.1662}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Fixed effects: inf.prob \textasciitilde{} trt * lim *
+bac.time}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.08\columnwidth}\centering\strut
+-2.338\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-0.7711\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+-0.04333\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering\strut
+0.6038\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering\strut
+2.481\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccc@{}}
+\caption{Standardized Within-Group Residuals}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{BcID}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+903\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+9\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
+-27.41\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccccc@{}}
+\caption{Linear mixed-effects model fit by REML : inf.prob
+\textasciitilde{} trt * lim * bac.time}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Value\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering\strut
+Std.Error\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+DF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+t-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Value\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering\strut
+Std.Error\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+DF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+t-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.4273\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.02265\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+601\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+18.87\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.049e-62\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{limP}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-0.07481\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.03158\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-2.369\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.07689\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-0.003292\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.0002187\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+601\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-15.05\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.135e-43\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{limP:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.0006311\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.0003058\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+601\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.064\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.03943\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Fixed effects: inf.prob \textasciitilde{} lim *
+bac.time}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.08\columnwidth}\centering\strut
+-1.785\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-0.7798\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+-0.04507\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+0.577\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+2.939\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccc@{}}
+\caption{Standardized Within-Group Residuals}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{BcID}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+609\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
+102.8\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccccc@{}}
+\caption{Linear mixed-effects model fit by REML : inf.prob
+\textasciitilde{} lim * bac.time}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+Value\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering\strut
+Std.Error\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+DF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+t-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering\strut
+Value\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering\strut
+Std.Error\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering\strut
+DF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+t-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+0.661\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.06062\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+289\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+10.9\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2.069e-23\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{limP}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+-0.2057\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.072\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-2.857\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.2143\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+-0.0008841\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.0008078\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+289\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-1.094\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.2747\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\textbf{limP:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering\strut
+-0.0004692\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering\strut
+0.0009035\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering\strut
+289\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+-0.5193\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.6039\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Fixed effects: inf.prob \textasciitilde{} lim *
+bac.time}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Min\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Q1\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Med\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Q3\strut
+\end{minipage} & \begin{minipage}[b]{0.08\columnwidth}\centering\strut
+Max\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.08\columnwidth}\centering\strut
+-1.829\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering\strut
+-1.022\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+-0.07812\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering\strut
+0.8374\strut
+\end{minipage} & \begin{minipage}[t]{0.08\columnwidth}\centering\strut
+1.779\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}cccc@{}}
+\caption{Standardized Within-Group Residuals}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.14\columnwidth}\centering\strut
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.18\columnwidth}\centering\strut
+Observations\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering\strut
+Groups\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Log-restricted-likelihood\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.14\columnwidth}\centering\strut
+\textbf{BcID}\strut
+\end{minipage} & \begin{minipage}[t]{0.18\columnwidth}\centering\strut
+294\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering\strut
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
+-87.31\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+Table: Linear mixed-effects model fit by REML : inf.prob
+\textasciitilde{} lim * bac.time
+
+\newpage
+
+\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\newpage
+
+\subsection{RMANOVA for Interaction
+Strengths}\label{rmanova-for-interaction-strengths}
 
 \begin{longtable}[]{@{}cccccc@{}}
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-AIC
-\strut\end{minipage} &
-\begin{minipage}[b]{0.07\columnwidth}\centering\strut
-BIC
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-logLik
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-L.Ratio
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+AIC\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\centering\strut
+BIC\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+logLik\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+L.Ratio\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{model.ar}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-254.3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-329
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
--108.2
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-NA
-\strut\end{minipage}\tabularnewline
+\textbf{model.ar}\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+169.1\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+260.1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-65.57\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+NA\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{model.arma1}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-233.7
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-312.3
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
--96.86
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-22.59
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2.003e-06
-\strut\end{minipage}\tabularnewline
+\textbf{model.arma1}\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+115.5\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+211.3\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-37.76\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+55.63\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+8.769e-14\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.21\columnwidth}\centering\strut
-\textbf{model.arma2}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-225.7
-\strut\end{minipage} &
-\begin{minipage}[t]{0.07\columnwidth}\centering\strut
-308.2
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
--91.84
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-10.05
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.001523
-\strut\end{minipage}\tabularnewline
+\textbf{model.arma2}\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+98.61\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\centering\strut
+199.2\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+-28.31\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+18.91\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.37e-05\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule
 \begin{minipage}[b]{0.43\columnwidth}\raggedright\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.17\columnwidth}\raggedright\strut
-Std.Error
-\strut\end{minipage} &
-\begin{minipage}[b]{0.13\columnwidth}\raggedright\strut
-t-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.16\columnwidth}\raggedright\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.17\columnwidth}\raggedright\strut
+Std.Error\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\raggedright\strut
+t-value\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\raggedright\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-\textbf{0.08346}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-\textbf{9.123}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-\textbf{4.674e-18}
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+\textbf{0.07713}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{9.872}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+\textbf{7.099e-22}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-\textbf{0.1136}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-\textbf{-2.871}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-\textbf{0.004325}
-\strut\end{minipage}\tabularnewline
+\textbf{trtT}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+\textbf{0.08638}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{-3.702}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+\textbf{0.0002276}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{limP}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-\textbf{0.1155}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-\textbf{-3.857}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-\textbf{0.01819}
-\strut\end{minipage}\tabularnewline
+\textbf{limP}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+\textbf{0.09298}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{-4.93}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+\textbf{0.007875}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{phage.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.0006714
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
--1.743
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.08219
-\strut\end{minipage}\tabularnewline
+\textbf{phage.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.0006172\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+-1.916\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.05569\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.001086
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-0.0845
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.9327
-\strut\end{minipage}\tabularnewline
+\textbf{bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.001005\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+0.1231\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.9021\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:limP}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.1588
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-1.295
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.196
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:limP}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.1078\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+1.856\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.06381\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:phage.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.0009219
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-0.7362
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.4621
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:phage.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.0007027\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+1.008\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.3136\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{limP:phage.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-\textbf{0.0009172}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-\textbf{2.812}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-\textbf{0.005188}
-\strut\end{minipage}\tabularnewline
+\textbf{limP:phage.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+\textbf{0.0007399}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{3.511}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+\textbf{0.0004695}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-\textbf{0.001379}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-\textbf{-2.373}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-\textbf{0.01815}
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+\textbf{0.001097}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{-3.091}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+\textbf{0.00206}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{limP:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.001367
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
--0.06095
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.9514
-\strut\end{minipage}\tabularnewline
+\textbf{limP:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.001136\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+-0.02436\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.9806\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{phage.time:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-9.204e-06
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
--1.641
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.1016
-\strut\end{minipage}\tabularnewline
+\textbf{phage.time:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+8.462e-06\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+-1.811\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.07056\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:limP:phage.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.001273
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
--0.6152
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.5388
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:limP:phage.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.0008774\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+-0.9831\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.3258\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:limP:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-0.001816
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-1.275
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.2029
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:limP:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+0.001294\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+1.933\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.05351\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:phage.time:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-1.15e-05
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-1.662
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.09738
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:phage.time:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+\textbf{9.205e-06}\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+\textbf{2.014}\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+\textbf{0.04427}\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{limP:phage.time:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-1.145e-05
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-0.3174
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.7511
-\strut\end{minipage}\tabularnewline
+\textbf{limP:phage.time:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+9.576e-06\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+0.4493\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.6533\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-\textbf{trtT:limP:phage.time:bac.time}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
-1.498e-05
-\strut\end{minipage} &
-\begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
--1.448
-\strut\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
-0.1484
-\strut\end{minipage}\tabularnewline
+\textbf{trtT:limP:phage.time:bac.time}\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\raggedright\strut
+1.086e-05\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
+-1.801\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\raggedright\strut
+0.07197\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -2199,49 +2330,6 @@ chemostat}\label{infection-dynamics-by-chemostat}
 treatment}\label{infection-dynamics-by-treatment}
 
 \subsubsection{Network plots}\label{network-plots}
-
-\begin{verbatim}
-##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
-##  [1,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [2,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [3,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [4,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [5,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [6,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [7,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [8,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##  [9,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [10,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [11,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [12,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [13,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [14,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [15,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [16,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [17,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [18,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-## [19,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-##       [,14] [,15] [,16] [,17] [,18] [,19]
-##  [1,]     0     0     0     0     0     0
-##  [2,]     0     0     0     0     0     0
-##  [3,]     0     0     0     0     0     0
-##  [4,]     0     0     0     0     0     0
-##  [5,]     0     0     0     0     0     0
-##  [6,]     0     0     0     0     0     0
-##  [7,]     0     0     0     0     0     0
-##  [8,]     0     0     0     0     0     0
-##  [9,]     0     0     0     0     0     0
-## [10,]     0     0     0     0     0     0
-## [11,]     0     0     0     0     0     0
-## [12,]     0     0     0     0     0     0
-## [13,]     0     0     0     0     0     0
-## [14,]     0     0     0     0     0     0
-## [15,]     0     0     0     0     0     0
-## [16,]     0     0     0     0     0     0
-## [17,]     0     0     0     0     0     0
-## [18,]     0     0     0     0     0     0
-## [19,]     0     0     0     0     0     0
-\end{verbatim}
 
 \includegraphics{analysis_ecoevostoich_files/figure-latex/coevo-pub/fig-1.pdf}
 
@@ -2262,79 +2350,61 @@ modularity}\label{biweb-estimates-for-nestedness-and-modularity}
 \begin{longtable}[]{@{}cccc@{}}
 \toprule
 \begin{minipage}[b]{0.24\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.23\columnwidth}\centering\strut
-statistic.t
-\strut\end{minipage} &
-\begin{minipage}[b]{0.20\columnwidth}\centering\strut
-parameter.df
-\strut\end{minipage} &
-\begin{minipage}[b]{0.22\columnwidth}\centering\strut
-p.value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.23\columnwidth}\centering\strut
+statistic.t\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\centering\strut
+parameter.df\strut
+\end{minipage} & \begin{minipage}[b]{0.22\columnwidth}\centering\strut
+p.value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-\textbf{connectance}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
-1.456400410208
-\strut\end{minipage} &
-\begin{minipage}[t]{0.20\columnwidth}\centering\strut
-3.89610299683149
-\strut\end{minipage} &
-\begin{minipage}[t]{0.22\columnwidth}\centering\strut
-0.220826873899216
-\strut\end{minipage}\tabularnewline
+\textbf{connectance}\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+1.456400410208\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+3.89610299683149\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\centering\strut
+0.220826873899216\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-\textbf{modularity.qb}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
--3.5488938188692
-\strut\end{minipage} &
-\begin{minipage}[t]{0.20\columnwidth}\centering\strut
-3.00184431086153
-\strut\end{minipage} &
-\begin{minipage}[t]{0.22\columnwidth}\centering\strut
-0.0380832752236465
-\strut\end{minipage}\tabularnewline
+\textbf{modularity.qb}\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+-3.5488938188692\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+3.00184431086153\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\centering\strut
+0.0380832752236465\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-\textbf{modularity.qr}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
--0.337865126206578
-\strut\end{minipage} &
-\begin{minipage}[t]{0.20\columnwidth}\centering\strut
-3.62274149633006
-\strut\end{minipage} &
-\begin{minipage}[t]{0.22\columnwidth}\centering\strut
-0.754122338605035
-\strut\end{minipage}\tabularnewline
+\textbf{modularity.qr}\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+-0.337865126206578\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+3.62274149633006\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\centering\strut
+0.754122338605035\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-\textbf{nodf}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
-0.371973397721244
-\strut\end{minipage} &
-\begin{minipage}[t]{0.20\columnwidth}\centering\strut
-3.80924523421393
-\strut\end{minipage} &
-\begin{minipage}[t]{0.22\columnwidth}\centering\strut
-0.729674513225951
-\strut\end{minipage}\tabularnewline
+\textbf{nodf}\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+0.371973397721244\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+3.80924523421393\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\centering\strut
+0.729674513225951\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-\textbf{ntc}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
--0.848020202172062
-\strut\end{minipage} &
-\begin{minipage}[t]{0.20\columnwidth}\centering\strut
-3.96441380258424
-\strut\end{minipage} &
-\begin{minipage}[t]{0.22\columnwidth}\centering\strut
-0.444591439999469
-\strut\end{minipage}\tabularnewline
+\textbf{ntc}\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+-0.848020202172062\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+3.96441380258424\strut
+\end{minipage} & \begin{minipage}[t]{0.22\columnwidth}\centering\strut
+0.444591439999469\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -2346,7 +2416,7 @@ resistance}{Synechococcus resistance}}\label{synechococcus-resistance}
 \subsubsection{global; sympatric vs.~allopatric
 resistance}\label{global-sympatric-vs.allopatric-resistance}
 
-\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-27-1.pdf}
+\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-30-1.pdf}
 
 \begin{verbatim}
 ##                   numDF denDF  F-value p-value
@@ -2359,246 +2429,186 @@ resistance}\label{global-sympatric-vs.allopatric-resistance}
 \begin{longtable}[]{@{}ccccc@{}}
 \toprule
 \begin{minipage}[b]{0.29\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2184
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2184\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.trt}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.05589
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.8247
-\strut\end{minipage}\tabularnewline
+\textbf{B.trt}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.05589\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.8247\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.daynumber}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-6
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-31.82
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{B.daynumber}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+31.82\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.trt:B.daynumber}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-6
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.5104
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.7992
-\strut\end{minipage}\tabularnewline
+\textbf{B.trt:B.daynumber}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5104\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.7992\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \begin{longtable}[]{@{}ccccc@{}}
 \toprule
 \begin{minipage}[b]{0.29\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1645
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1645\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.trt}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.962
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.2339
-\strut\end{minipage}\tabularnewline
+\textbf{B.trt}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.962\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.2339\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.daynumber}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-6
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-27.78
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{B.daynumber}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+27.78\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.trt:B.daynumber}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-6
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.7992
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.5729
-\strut\end{minipage}\tabularnewline
+\textbf{B.trt:B.daynumber}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.7992\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5729\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
 \begin{longtable}[]{@{}ccccc@{}}
 \toprule
 \begin{minipage}[b]{0.29\columnwidth}\centering\strut
-~
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-numDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.10\columnwidth}\centering\strut
-denDF
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-F-value
-\strut\end{minipage} &
-\begin{minipage}[b]{0.12\columnwidth}\centering\strut
-p-value
-\strut\end{minipage}\tabularnewline
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+numDF\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering\strut
+denDF\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+F-value\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+p-value\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{(Intercept)}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-2394
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+2394\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.trt}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-1
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-4
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.4009
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.561
-\strut\end{minipage}\tabularnewline
+\textbf{B.trt}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.4009\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.561\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.daynumber}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-6
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-36.72
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0
-\strut\end{minipage}\tabularnewline
+\textbf{B.daynumber}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+36.72\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.29\columnwidth}\centering\strut
-\textbf{B.trt:B.daynumber}
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-6
-\strut\end{minipage} &
-\begin{minipage}[t]{0.10\columnwidth}\centering\strut
-97
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-1.557
-\strut\end{minipage} &
-\begin{minipage}[t]{0.12\columnwidth}\centering\strut
-0.168
-\strut\end{minipage}\tabularnewline
+\textbf{B.trt:B.daynumber}\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering\strut
+97\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+1.557\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.168\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -2606,7 +2616,7 @@ p-value
 
 \subsubsection{Compositional resistance}\label{compositional-resistance}
 
-\subsection{\texorpdfstring{\protect\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-29-1.pdf}}{}}\label{section}
+\subsection{\texorpdfstring{\protect\includegraphics{analysis_ecoevostoich_files/figure-latex/unnamed-chunk-32-1.pdf}}{}}\label{section-2}
 
 \begin{longtable}[]{@{}ccccccc@{}}
 \toprule
@@ -2618,9 +2628,9 @@ Pr(\textgreater{}F)\tabularnewline
 \bottomrule
 \end{longtable}
 
-\textbf{Limitation} 1 0.03804 0.03804 0.6411 0.003496 0.018
+\textbf{Limitation} 1 0.03804 0.03804 0.6411 0.003496 0.017
 
-**Time*Limitation** 1 0.07149 0.07149 1.205 0.006572 0.267
+**Time*Limitation** 1 0.07149 0.07149 1.205 0.006572 0.258
 
 \begin{verbatim}
 **Residuals**     110     6.527     0.05933     NA       0.6       NA   
@@ -2655,7 +2665,7 @@ infection}\label{treatement-level-degree-of-infection}
 
 \subsection{R and packages}\label{r-and-packages}
 
-All analyses were completed using R version 3.2.5 (2016-04-14)
+All analyses were completed using R version 3.3.2 (2016-10-31)
 
 \newpage
 
@@ -2670,57 +2680,51 @@ All analyses were completed using R version 3.2.5 (2016-04-14)
 \begin{longtable}[]{@{}ccc@{}}
 \toprule
 \begin{minipage}[b]{0.24\columnwidth}\centering\strut
-Word
-\strut\end{minipage} &
-\begin{minipage}[b]{0.19\columnwidth}\centering\strut
-Abbreviation
-\strut\end{minipage} &
-\begin{minipage}[b]{0.15\columnwidth}\centering\strut
-Definition
-\strut\end{minipage}\tabularnewline
+Word\strut
+\end{minipage} & \begin{minipage}[b]{0.19\columnwidth}\centering\strut
+Abbreviation\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+Definition\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-Nitrogen
-\strut\end{minipage} &
-\begin{minipage}[t]{0.19\columnwidth}\centering\strut
-N
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-\strut\end{minipage}\tabularnewline
+Nitrogen\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\centering\strut
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-Phosphorus
-\strut\end{minipage} &
-\begin{minipage}[t]{0.19\columnwidth}\centering\strut
-P
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-\strut\end{minipage}\tabularnewline
+Phosphorus\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\centering\strut
+P\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-Nitrogen Limited
-\strut\end{minipage} &
-\begin{minipage}[t]{0.19\columnwidth}\centering\strut
-NL
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-\strut\end{minipage}\tabularnewline
+Nitrogen Limited\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\centering\strut
+NL\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-Phosphorus Limited
-\strut\end{minipage} &
-\begin{minipage}[t]{0.19\columnwidth}\centering\strut
-PL
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-\strut\end{minipage}\tabularnewline
+Phosphorus Limited\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\centering\strut
+PL\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+\strut
+\end{minipage}\tabularnewline
 \begin{minipage}[t]{0.24\columnwidth}\centering\strut
-chemostat
-\strut\end{minipage} &
-\begin{minipage}[t]{0.19\columnwidth}\centering\strut
-cID
-\strut\end{minipage} &
-\begin{minipage}[t]{0.15\columnwidth}\centering\strut
-\strut\end{minipage}\tabularnewline
+chemostat\strut
+\end{minipage} & \begin{minipage}[t]{0.19\columnwidth}\centering\strut
+cID\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{document}
