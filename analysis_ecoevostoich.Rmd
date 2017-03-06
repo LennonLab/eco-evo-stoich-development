@@ -653,7 +653,7 @@ set.caption("RMANOVA table for SRIM8 phage")
 pander(anova(ar1.phage))
 
 #Syn
-ar1.syn <- lme(log.abd ~ lim * day, random = ~ 1 | cID, 
+ar1.syn <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID, 
             correlation=corAR1(form = ~ 1 | cID),
             data=syn)
 anova.lme(ar1.syn, type = "marginal")
@@ -1311,6 +1311,9 @@ colnames(bor.cstat) <- c("BcID","cID","phage.time","bac.time","inf.prob","trt","
 ```
 
 ```{r fig.height = 5, fig.width = 5}
+
+
+## This calculation is modified from Gaba et al
 bor.cstat$ptime.adj <- bor.cstat$phage.time
 bor.cstat$btime.adj <- bor.cstat$bac.time
 
@@ -1346,11 +1349,12 @@ facet_labeller <- function(variable,value){
 
 
 # Time shift by time point
-p <- ggplot(bor.cstat, aes(x = time.shift, y = inf.prob, col = bac.time.fac)) +
+p <- ggplot(bor.cstat, aes(x = time.shift, y = inf.prob, col = bac.time.fac, label = bac.time.fac)) +
   #geom_point()+
 #  geom_point(bor.cstat[bor.cstat$time.shift == 0,], aes(x = time.shift, y = inf.prob),
 #             col = "black",size = 1.25) +
   #annotate("text", x = label = bac.time.fac) +
+  geom_vline(xintercept = 0, lty = 2, col = "grey50")+
   stat_summary(fun.y = mean,geom="line")+
   facet_grid(trt~lim, labeller=facet_labeller)+
   xlab("Time Shift (days) relative to host") +
@@ -1368,8 +1372,8 @@ p <- ggplot(bor.cstat, aes(x = time.shift, y = inf.prob, col = bac.time.fac)) +
 print(p)
 
 
-ggsave("./supporting-files/time_shift.tif", p, device = "tiff", 
-       scale = 1, width = 6, height = 4, units = "in", dpi = 300)
+#ggsave("./supporting-files/time_shift.tif", p, device = "tiff", 
+#       scale = 1, width = 6, height = 4, units = "in", dpi = 300)
 
 
 p1 <- ggplot(bor.cstat, aes(x = time.shift, y = inf.prob)) +
