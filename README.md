@@ -1,1 +1,0 @@
-# eco-evo-stoich
