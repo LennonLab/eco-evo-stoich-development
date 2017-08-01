@@ -14,7 +14,7 @@ geometry: margin=1in
 
 ```{r setup, include = FALSE}
 #rm(list=ls())
-setwd("C:/Users/meglarse/GitHub/eco-evo-stoich")
+setwd("C:/Users/meglarse/GitHub/eco-evo-stoich/code/pop-dynamics/")
 
 # Load packages and dependencies
 #require(aggregate)
@@ -22,14 +22,12 @@ require(reshape); require(nlme); require(vegan)
 require(igraph); require(bipartite)
 require(plotrix);require(pander)
 require(ggplot2); require(gridExtra)
-require(reshape);require(nlme)
+require(nlme)
 require(synchrony); require(astsa)
-require(xtable)
-# for latex tables
-require(stargazer)
+
 
 # load dependencies
-source("./bin/microscope.counts.R")
+source("../../bin/microscope.counts.R")
 
 ```
 
@@ -49,7 +47,7 @@ knitr::opts_chunk$set(fig.width=7.5, fig.height=4,
 <Data Reduction>
 ```{r, results = 'hide'}
 # Reduce raw microscope field counts (ts-counts_raw) using the function bin\microscope.counts to create average cyanobacteria and phage counts per sampling date for each chemostat in the experiment
-# microscope.counts("./data/pop-dynamics/R/ts-counts_raw.csv",  "ts-counts")
+# microscope.counts("../../data/pop-dynamics/R/ts-counts_raw.csv",  "ts-counts")
 
 # Read in the processed data
 ts.counts <- read.csv(file="../../data/pop-dynamics/R/ts-counts.csv",  header = F)
@@ -97,7 +95,7 @@ for(i in 1:length(cID)){
 #merge data and change column names
 cstat.abd <- data.frame(day.list,type.list,lim.list,virus.list,cID.list,abd.list)
 colnames(cstat.abd) <- c("day","microbe","lim","type","cID","abd")
-#write.csv(cstat.abd, file = "./data/pop-dynamics/R/cid-means.csv", row.names = F)
+#write.csv(cstat.abd, file = "../../data/pop-dynamics/R/cid-means.csv", row.names = F)
 
 
 ```
@@ -147,7 +145,7 @@ avg.data <- cbind(rep(day,2),avg.data[,2:ncol(avg.data)])
 colnames(avg.data) <- c("day","lim",
                         "PmeanC","PmeanI","SmeanC","SmeanI",
                         "PseC","PseI","SseC","SseI")
-#write.csv(avg.data, file = "./data/pop-dynamics/R/cstat-means.csv", row.names = F)
+#write.csv(avg.data, file = "../../data/pop-dynamics/R/cstat-means.csv", row.names = F)
 ```
 
 
@@ -370,7 +368,7 @@ ar1.phage <- lme(log.abd ~ lim * day.fac, random = ~ 1 | cID,
 #xtable(anova.lme(ar1.phage, type = "marginal"))
 
 #summary(ar1.phage)
-set.caption("RMANOVA table for SRIM8 phage between N-limited vs. P-limited environments")
+set.caption("RMANOVA table for SRIM8 phage between N-limited vs. P-limited environments. lim: nutrient limitation (nitrogen-limited [NL] or phosphorus-limited [PL]); day.fac: time in the experimental timecourse")
 pander(anova(ar1.phage))
 
 #Syn
@@ -399,7 +397,7 @@ ar1.syn <- lme(log.abd ~ lim * day.fac * type, random = ~ 1 | cID,
 #summary(ar1.syn)
 #xtable(anova.lme(ar1.syn,type="sequential"))
 #install.packages("multcomp")
-set.caption("RMANOVA table comparison between -Ph and +Ph Synechococcus")
+set.caption("RMANOVA table comparison between -Ph and +Ph Synechococcus. lim: nutrient limitation; day.fac: time in experimental timecourse; type: *Synechococcus* exposure to phage [control, treatment]")
 pander(anova(ar1.syn))  
 
   
@@ -425,21 +423,24 @@ pander(anova(ar1.syn))
 
 \newpage
 
-## Stability (CV) and associated tables
+## Stability (1/CV) and associated tables
 ```{r}
 #install.packages("reshape2")
 #library(reshape2)
+
+
 
 ts.stab <- function(x){
     1/(sd(x)/mean(x))
 }
 
 dat = subset(cstat.abd,cstat.abd$day > 0)
+dat$logabd <- log10(dat$abd)
 dat = na.omit(dat)
 
-means = cast(dat, lim + type ~ microbe, mean)
-sems = cast(dat, lim + type ~ microbe, sem)
-ts.stabs = cast(dat, lim + type ~ microbe, ts.stab)
+means = cast(dat, lim + type ~ microbe, mean, value = "abd")
+sems = cast(dat, lim + type ~ microbe, sem, value = "abd")
+ts.stabs = cast(dat, lim + type ~ microbe, ts.stab, value = "logabd")
 
 table1 <- data.frame("Limitation" = means[,1], 
                 "Treatment" = means[,2],
@@ -453,9 +454,9 @@ colnames(table1) <- c("Limitation","Treatment","Synechococcus mean densitiy (+/-
 # Creates table by treatment
 pander(table1, split.cells = c(5,10,15,15,15,15),split.tables = Inf, caption = "Average population density and stability by treatment")
 
-means.cid = cast(dat, cID + type ~ microbe, mean)
-sems.cid = cast(dat, cID + type ~ microbe, sem)
-ts.stabs.cid = cast(dat, cID + type ~ microbe, ts.stab)
+means.cid = cast(dat, cID + type ~ microbe, mean, value = "abd")
+sems.cid = cast(dat, cID + type ~ microbe, sem, value = "abd")
+ts.stabs.cid = cast(dat, cID + type ~ microbe, ts.stab, value = "logabd")
 
 table2 <- data.frame("Limitation" = means.cid[,1], 
                 "Treatment" = means.cid[,2],
@@ -524,6 +525,7 @@ ts.stab <- function(x){
 }
 
 ts.abd <- subset(cstat.abd,cstat.abd$type == "Infect" & cstat.abd$day > 0)
+ts.abd$logabd <- log10(ts.abd$abd)
 ts.abd <- na.omit(ts.abd)
 
 #Initialize data storage
@@ -541,9 +543,9 @@ for(i in unique(ts.abd$cID)){
   	#subset data
     
     if(j == "Phage"){
-      tmp <- ts.abd[ts.abd$microbe == j & ts.abd$cID == i,1:6]
+      tmp <- ts.abd[ts.abd$microbe == j & ts.abd$cID == i,1:7]
     } else {
-      tmp <- ts.abd[ts.abd$microbe == j & ts.abd$cID == i,1:6]
+      tmp <- ts.abd[ts.abd$microbe == j & ts.abd$cID == i,1:7]
     }
     
     r <- r + 1 
@@ -552,7 +554,7 @@ for(i in unique(ts.abd$cID)){
     results[r,1] <- as.character(tmp[1,3])    #Limitation
     results[r,2] <- as.character(i)           #cID
     results[r,3] <- as.character(j)           #microbe   
-    results[r,4] <- ts.stab(tmp[,6])          #population stability
+    results[r,4] <- ts.stab(tmp[,7])          #population stability
          
     results[r,5] <- tmp[1,6]# starting abundance
     results[r,6] <- tmp[nrow(tmp),6]# final abundance
@@ -560,7 +562,7 @@ for(i in unique(ts.abd$cID)){
     results[r,8] <- min(tmp[, 6])# minimum abd
     results[r,9] <- tmp[, 1][tmp[, 6] == max(tmp[, 6])]# max day
     results[r,10] <- max(tmp[, 6])# max abd
-    #results[i,12] <- (Day0abd-Min.abd)/Min.day # decline rate
+    #results[i,11] <- (tmp[1,6]-min(tmp[, 6]))/(tmp[, 1][tmp[, 6] == min(tmp[, 6])]) # decline rate
     #results[i,13] <- (Max.abd-Min.abd)/(Max.day-Min.day)# recovery rate
     #results[i,14] <- (TF-Min.abd)/(TFday-Min.day)# recovery rate final
 		
@@ -573,11 +575,10 @@ ts.top <- merge(basic.stats,ts.top,id=c("lim","cID","microbe"))
 top.sort <- ts.top[order(ts.top$microbe),]
 rownames(top.sort)=NULL
 #colnames(top.sort)=c("Limitation Treatment", "Chemostat ID","Microbe","Mean Abundance","Variation", )
-#write.csv(top.sort, file = "./output/ts-topology.csv")
-#write.csv(top.sort, file = "./supporting-files/data/ts-topographic-info.csv",row.names = FALSE)
+
+#write.csv(top.sort, file = "../../data/pop-dynamics/R/ts-topographic-info.csv",row.names = FALSE)
 set.caption("Descriptive statistical summary of population data.")
 pander(top.sort)
-#xtable(top.sort)
 ```
 
 
@@ -591,17 +592,18 @@ nsyn <- subset(top.sort, top.sort$lim == "N" & top.sort$microbe == "Syn")
 #calculate the stats
 syn.mean <- t.test(psyn$mean,nsyn$mean, alternative="two.sided",conf.int = 0.95)
 phage.mean <- t.test(pphage$mean,nphage$mean, alternative="two.sided",conf.int = 0.95)
-syn.stab <- t.test(psyn$stab,nsyn$stab, alternative="two.sided",conf.int = 0.95)
-phage.stab <- t.test(pphage$stab,nphage$stab, alternative="two.sided",conf.int = 0.95)
+syn.stab <- t.test(psyn$stab,nsyn$stab, alternative="greater",conf.int = 0.95)
+phage.stab <- t.test(pphage$stab,nphage$stab, alternative="greater",conf.int = 0.95)
 
 #assemble the data
-top.stats <- matrix(NA,4,4)
+top.stats <- matrix(NA,4,5)
 top.stats <- data.frame(top.stats)
-colnames(top.stats) <- c("microbe","analysis","df","pvalue")
+colnames(top.stats) <- c("microbe","analysis","t","df","pvalue")
 top.stats[,1] <- c("syn","syn","phage","phage")
 top.stats[,2] <- c("mean","stability","mean","stability")
-top.stats[,3] <- round(c(syn.mean[[2]],syn.stab[[2]],phage.mean[[2]],phage.stab[[2]]),digits = 2)
-top.stats[,4] <- round(c(syn.mean[[3]],syn.stab[[3]],phage.mean[[3]],phage.stab[[3]]), digits = 5)
+top.stats[,3] <- round(c(syn.mean[[1]],syn.stab[[1]],phage.mean[[1]],phage.stab[[1]]), digits = 3)
+top.stats[,4] <- round(c(syn.mean[[2]],syn.stab[[2]],phage.mean[[2]],phage.stab[[2]]),digits = 2)
+top.stats[,5] <- round(c(syn.mean[[3]],syn.stab[[3]],phage.mean[[3]],phage.stab[[3]]), digits = 3)
 
 #top.stats
 set.caption("t-test summary for population mean and stability of +Ph Synechococcus and phage")
