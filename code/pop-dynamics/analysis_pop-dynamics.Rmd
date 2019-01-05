@@ -10,12 +10,12 @@ output:
     latex_engine: xelatex
     number_sections: yes
 geometry: margin=1in
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
 #rm(list=ls())
-setwd("C:/Users/meglarse/GitHub/eco-evo-stoich/code/pop-dynamics/")
-
 # Load packages and dependencies
 #require(aggregate)
 require(reshape); require(nlme); require(vegan)
@@ -24,6 +24,7 @@ require(plotrix);require(pander)
 require(ggplot2); require(gridExtra)
 require(nlme)
 require(synchrony); require(astsa)
+library(tidyverse)
 
 
 # load dependencies
@@ -99,6 +100,202 @@ colnames(cstat.abd) <- c("day","microbe","lim","type","cID","abd")
 
 
 ```
+
+```{r cstatSummaryCalcs}
+
+sem <- function(x){
+     sd(x)/sqrt(3)
+}
+
+ts.counts.mod <- ts.counts
+colnames(ts.counts.mod) <- c("microbe","cID","rep","trt","lim",ts.counts[1,6:ncol(ts.counts)])
+ts.counts.mod <- ts.counts.mod[-1,]
+
+ts.counts.sum <- ts.counts.mod %>%
+  gather(day, abundance, "-125":"166") %>%
+  mutate(day = as.numeric(day), 
+         trt.lim = paste(trt,".",lim, sep =""),
+         microbe.cID = paste(microbe,".",cID, sep ="")) %>%
+  group_by(day, trt, lim, microbe) %>%
+  summarise(mean = mean(abundance, na.rm = T), sem = sem(abundance), 
+            min = min(abundance), max = max(abundance))
+
+```
+
+```{r Fig1Updated}
+theme_std <- function (base_size = 10, base_family = "") {
+  theme_grey(base_size = base_size, base_family = base_family) %+replace% 
+    theme(axis.ticks = element_line(colour = "black", size = 0.5), 
+          legend.key = element_rect(colour = NA), 
+          legend.background = element_rect(fill =NA, colour = NA),
+          panel.background = element_rect(fill = "white", colour = NA), 
+          panel.border = element_rect(colour = "black", fill=NA, size = 1),
+          axis.line = element_line(colour = "black", size = 1),
+          panel.grid.major = element_line(NA), 
+          panel.grid.minor = element_line(NA), 
+          axis.text  = element_text(size=rel(0.9), colour = "grey40"),
+#          axis.title  = element_text(size=rel(1.0)),
+          axis.title.x = element_text(margin = unit(c(3, 0, 0, 0), "mm"),
+                                      size=rel(1.25), colour = "grey30"),
+          axis.title.y = element_text(margin = unit(c(0, 3, 0, 0), "mm"),
+                                      size=rel(1.25), angle = 90, colour= "grey30"),
+          strip.text = element_text(size = rel(1.25), colour = "black", face = "bold"), #face = "normal"
+          strip.background = element_blank(),
+          plot.margin=unit(c(10,10,10,10),"pt"), 
+panel.spacing = unit(25,"pt")
+    )
+}
+
+library(lemon)
+droplevels(ts.counts.sum$lim)
+levels(ts.counts.sum$lim) <- c("","N-limited","P-limited")
+p <- ggplot(data = ts.counts.sum %>% 
+         filter(trt == "Infect", day >= -6), 
+       aes(x = day, y = mean, ymin = mean-sem, ymax = mean+sem,
+           shape = microbe, col = microbe)) +
+  geom_vline(xintercept = 0, size = 0.25) +
+  geom_errorbar(col = "black", width = 0)+
+  geom_line(col = "black") + geom_point() + facet_grid(~lim) +
+  scale_shape_manual(values = c(15,19), name = "") + 
+  geom_point(data = ts.counts.sum %>% 
+         filter(trt == "Infect", microbe =="Syn", day >= -6), 
+       aes(x = day, y = mean), size = 2, col= "black") +
+  geom_point(data = ts.counts.sum %>% 
+         filter(trt == "Infect", microbe =="Syn", day >= -6), 
+       aes(x = day, y = mean), size = 1.5, col= "white") +
+  scale_color_manual(values = c("black","white"), name = "")+
+  scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  labs(x = "Time (d)", y = expression(Abundance~(mL^-1))) + 
+  theme_std() +
+  annotation_logticks(sides = "lr")
+
+reposition_legend(p, panel = "panel-2-1",'bottom right')
+#ggsave(plot = reposition_legend(p, panel = "panel-2-1",'bottom right'), filename = "../../figures/Fig1_AvgPopDynamics_revised.tiff", units = "in", height = 3, width = 5.75, dpi = 300, scale = 1.5, device = "tiff")
+
+p <- ggplot(data = ts.counts.sum %>% 
+         filter(trt == "Control", day >= -6), 
+       aes(x = day, y = mean, ymin = min, ymax = max)) +
+  geom_vline(xintercept = 0, size = 0.25) +
+  geom_errorbar(col = "black", width = 0)+
+  geom_line(col = "grey70") + geom_point() + facet_grid(~lim) +
+  #scale_shape_manual(values = c(15,19)) + 
+  scale_color_manual(values = c("black","white"))+
+  scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  labs(x = "Time (d)", y = expression(Abundance~(mL^-1))) + 
+  theme_std() +
+  annotation_logticks(sides = "lr")
+
+#ggsave(plot = p, filename = "../../figures/FigS2_AvgPopDynamics_revised.tiff", units = "in", height = 3, width = 5.75, dpi = 300, scale = 1.2, device = "tiff")
+
+#reposition_legend(p, panel = "panel-2-1",'bottom right')
+```
+
+## CCF analysis
+```{r Nlim_CCF}
+# convert irregular time series to regular time series
+library(pastecs)
+
+ts.counts.sum2 <- as.data.frame(ts.counts.sum)
+
+ccf.dataset.N.log <- ts.counts.sum2 %>%
+  filter(day > 0, day<= 149, trt == "Infect", lim == "N-limited") %>%
+  select(microbe, day, mean) %>%
+  ungroup() %>%
+  mutate(mean = log10(mean)) %>%
+  spread(microbe, mean)
+
+length(ccf.dataset.N.log$day)
+intervals.N <- ccf.dataset.N.log$day[2:59] - ccf.dataset.N.log$day[1:58]
+range(intervals.N); mean(intervals.N)
+
+# range is variable - need to be regulated to be converted to ts
+ts.n.reg <- regul(ccf.dataset.N.log$day, ccf.dataset.N.log[2:3], xmin = 2, deltat = 2,
+                  methods = c("l","l"), n = 74)
+
+tiff(filename = "../../figures/SRegTS_N.tiff", units = "in", width = 7.5, height = 4, res = 300)
+par(mfrow = c(1,2))
+n.syn <- plot(ts.n.reg,2)
+n.phage <- plot(ts.n.reg,1)
+dev.off()
+
+specs(ts.n.reg)
+syn.n.ts <- extract(ts.n.reg, series = "Syn")
+phage.n.ts <- extract(ts.n.reg, series = "Phage")
+
+library(tseries)
+adf.test(syn.n.ts)
+diff.syn.n.ts <- diff(syn.n.ts)
+adf.test(diff.syn.n.ts)
+
+adf.test(phage.n.ts)
+diff.phage.n.ts <- diff(phage.n.ts)
+adf.test(diff.phage.n.ts)
+
+#ccf.n <- ccf(syn.n.ts,phage.n.ts, type = "correlation")
+ccf.n <- ccf(diff.syn.n.ts,diff.phage.n.ts, type = "correlation", main ="N-limited", lag.max = 5)
+
+alldata=ts.intersect(diff.syn.n.ts,synlag2=stats::lag(diff.syn.n.ts,2), 
+                     diff.syn.n.ts,synlag4=stats::lag(diff.syn.n.ts,4),
+                     diff.syn.n.ts,synlag6=stats::lag(diff.syn.n.ts,6))
+str(alldata) #ts from 4 to 136
+alldata <- as.data.frame(alldata)
+tryit = lm(diff.phage.n.ts[2:68]~synlag2+synlag4 +synlag6, data = alldata)
+summary (tryit)
+
+acf2(residuals(tryit))
+
+```
+
+```{r Plim_CCF}
+# convert irregular time series to regular time series
+ccf.dataset.P.log <- ts.counts.sum2 %>%
+  filter(day > 0, day<= 149, trt == "Infect", lim == "P-limited") %>%
+  select(microbe, day, mean) %>%
+  ungroup() %>%
+  mutate(mean = log10(mean)) %>%
+  spread(microbe, mean)
+
+length(ccf.dataset.P.log$day)
+intervals.P <- ccf.dataset.P.log$day[2:59] - ccf.dataset.P.log$day[1:58]
+range(intervals.P); mean(intervals.P)
+
+# range is variable - need to be regulated to be converted to ts
+ts.p.reg <- regul(ccf.dataset.P.log$day, ccf.dataset.P.log[2:3], xmin = 2, deltat = 2,
+                  methods = c("l","l"), n = 74)
+
+tiff(filename = "../../figures/SRegTS_P.tiff", units = "in", width = 7.5, height = 4, res = 300)
+par(mfrow = c(1,2))
+p.syn <- plot(ts.p.reg,2)
+p.phage <- plot(ts.p.reg,1)
+dev.off()
+
+specs(ts.p.reg)
+syn.p.ts <- extract(ts.p.reg, series = "Syn")
+phage.p.ts <- extract(ts.p.reg, series = "Phage")
+
+adf.test(syn.p.ts)
+diff.syn.p.ts <- diff(syn.p.ts)
+adf.test(diff.syn.p.ts)
+
+adf.test(phage.p.ts)
+diff.phage.p.ts <- diff(phage.p.ts)
+adf.test(diff.phage.p.ts)
+
+#ccf.n <- ccf(syn.n.ts,phage.n.ts, type = "correlation")
+ccf.p <- ccf(diff.syn.p.ts,diff.phage.p.ts, type = "correlation", main ="P-limited", lag.max = 5)
+
+```
+
+```{r CCF_plot}
+tiff(filename = "../../figures/S_ccf.tiff", units = "in", width = 7.5, height = 3.5, res = 300)
+par(mfrow = c(1,2))
+ccf2(diff.syn.n.ts,diff.phage.n.ts, main ="N-limited", max.lag = 5)
+ccf2(diff.syn.p.ts,diff.phage.p.ts, main ="P-limited", max.lag = 5)
+dev.off()
+```
+
 
 ```{r trt-cals}
 #reshape data file from long form to columns for syn, phage, and p:s ratio
@@ -580,7 +777,6 @@ rownames(top.sort)=NULL
 set.caption("Descriptive statistical summary of population data.")
 pander(top.sort)
 ```
-
 
 ```{r}
 #subset the data set
