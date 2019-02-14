@@ -1,0 +1,295 @@
+---
+title: Nutrient Growth
+author:
+- M. Larsen^[Indiana University, Bloomington, IN]
+abstract:
+output: 
+  pdf_document:
+    fig_caption: yes
+    keep_tex: no
+    latex_engine: xelatex
+    number_sections: yes
+geometry: margin=1in
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup}
+# Setup Work Environment
+rm(list=ls())
+
+library(pander)
+
+# Load Dependencies
+source("./bin/modified_Gomp.r")
+```
+
+```{r gr-vis}
+# read in data file
+dat <- read.csv("./data/supplemental/NutrGR.csv", header = T)
+
+p <- ggplot(dat,aes(med.add,GR)) +
+  facet_grid(~media.base) + 
+  geom_point(aes(color= med.add), size=3) +
+  geom_boxplot(aes(fill=med.add), alpha=I(0.75)) +
+  scale_color_grey(start = 0.2, end = 0.8) +
+  scale_fill_grey(start = 0, end = 1)+
+  theme_bw()+
+  theme(legend.position='none',
+        axis.text.x  = element_text(size=10),
+        axis.text.y  = element_text(size=10),
+        axis.title.x = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        axis.title.y = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)))+
+  labs(x ="Resource Addition",
+       #y = expression(~ Delta ~"Growth Rate (day^ -1)"))
+       y = "Growth Rate")
+p$data$med.add <- factor(p$data$med.add, levels = c("C","P","N","NP"))
+
+print(p)
+
+ggsave("fig_nutrGR.pdf", plot = p, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 3.5, units = "in", dpi = 1200)
+
+# calculate means for each group
+dat.ag <- aggregate(GR ~ media.base + med.add, dat, function(x) c(mean = mean(x), sd = sd(x)))
+
+
+write.csv(dat.ag, file = "./supporting-files/chpt-tables/table_nutrGR.csv",row.names = FALSE)
+#set.caption("Resource Growth Rate Aggregate Data")
+#pander(dat.ag, justify = "center")
+
+```
+
+\newpage
+
+### Growth rate ANOVA tables
+**N-limited**
+
+```{r gr-statsN}
+
+fitN = aov(GR ~ med.add, dat[dat$media.base == "NL",])
+sum.fitN = summary(fitN)
+tukey.fitN = TukeyHSD(fitN)
+
+round(tukey.fit$med.add, digits = 3)
+set.caption("ANOVA table for NL nutrient addition")
+pander(aov(GR ~ med.add, dat[dat$media.base == "NL",]),table.split.table = inf)
+
+set.caption("Posthoc comparisons using Tukey HSD")
+#emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
+pander(tukey.fitN$med.add[,1:4],table.split.table = inf)
+write.csv(file = "./supporting-files/data/NL-nutrGRstats.csv",tukey.fitN)
+#kable(tukey.fitN$med.add[,1:4], format = "latex", digits = 3, 
+#      caption = "ANOVA table for N-limited treatments with Tukey post-hoc comparisons")
+```
+
+**P-limited**
+
+```{r gr-statsP}
+
+fitP = aov(GR ~ med.add, dat[dat$media.base == "PL",])
+sum.fitP = summary(fitP)
+tukey.fitP = TukeyHSD(fitP)
+
+#round(tukey.fit$med.add, digits = 3)
+set.caption("ANOVA table for PL nutrient addition")
+pander(aov(GR ~ med.add, dat[dat$media.base == "PL",]),table.split.table = inf)
+
+set.caption("Posthoc comparisons using Tukey HSD")
+emphasize.strong.rows(which(tukey.fitP$med.add[,4] < 0.05, arr.ind = TRUE))
+pander(tukey.fitP$med.add[,1:4],table.split.table = inf)
+
+#kable(tukey.fitP$med.add[,1:4], format = "latex", digits = 3, 
+#      caption = "ANOVA table for P-limited treatments with Tukey post-hoc comparisons")
+
+```
+
+
+\newpage
+
+## Percent Change in Growth 
+```{r perc.change}
+media <- c(); trt <- c()
+avgGR <- c(); stdGR <- c()
+delta <- c(); perc <- c()
+
+for(i in unique(dat[,1])){
+	for(j in unique(dat[,2])){
+		for(k in unique(dat[,3])){
+			tmp <- dat[,5][dat[,1]==i&dat[,2]==j&dat[,3]==k]
+			ctrl <- mean(dat[,5][dat[,1]==i&dat[,2]=="C"])
+			avg <- mean(tmp) #average replicate value
+			d <- avg-ctrl #subtract mean control from replicate average
+			sdm <- sd(tmp)
+      perc.change <- ((avg-ctrl)/ctrl)*100
+
+			avgGR <- append(avgGR,avg)
+			stdGR <- append(stdGR,sdm)
+			media <- append(media,i)
+			trt <- append(trt,j)
+			delta <- append(delta,d)
+			perc <- append(perc, perc.change)
+		}
+	}
+
+}
+
+results = data.frame(media,trt,avgGR,stdGR,delta, perc)
+colnames(results) = c("med.base","med.add","mean.GR","std.GR", "delta.GR","perc.change")
+
+results = results[results$med.add != "C" & perc >= 0,]
+
+
+
+p2 <- ggplot(results,aes(med.add,perc.change)) + facet_grid(~med.base) + 
+  geom_point(aes(color=med.add), size=3) + 
+  geom_boxplot(aes(fill=med.add), alpha=I(0.5)) +
+  scale_color_grey(start = 0.2, end = 0.8) +
+  scale_fill_grey(start = 0, end = 1)+
+  theme_bw()+
+  theme(legend.position='none',
+        axis.text.x  = element_text(size=10),
+        axis.text.y  = element_text(size=10),
+        axis.title.x = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)),
+        axis.title.y = element_text(colour="black", size=12,
+                                    margin = margin(20,20,10,10)))+
+  labs(x ="Resource Addition",
+       y = "Percent Change")
+p2$data$med.add = factor(p2$data$med.add, levels = c("P","N","NP"))
+
+print(p2)
+
+ggsave("fig_perc.change.pdf", plot = p2, device = "pdf", path = "./supporting-files/chpt-figs", scale = 1, width = 6, height = 3.5, units = "in", dpi = 1200)
+ 
+
+# calculate means for each group
+results.ag <- aggregate(. ~ med.add + med.base, results, 
+                        function(x) c(mean = mean(x),sd = sd(x)))
+results.ag[,3:5] = round(results.ag[,3:5], digits = 3)
+set.caption("Resource Percent Change in Growth Aggregate Data")
+pander(results.ag, justify = "center",table.split.table = inf)
+
+write.csv(results.ag, file = "./supporting-files/chpt-tables/table_perchange.csv",row.names = FALSE)
+
+```
+
+\newpage
+
+### Growth rate ANOVA tables
+**N-limited**
+
+```{r perc.change-statsN}
+
+fitN = aov(perc.change ~ med.add, results[results$med.base == "NL",])
+sum.fitN = summary(fitN)
+tukey.fitN = TukeyHSD(fitN)
+
+#round(tukey.fit$med.add, digits = 3)
+set.caption("ANOVA table for NL nutrient addition")
+pander(fitN,table.split.table = inf)
+
+set.caption("Posthoc comparisons using Tukey HSD")
+#emphasize.strong.rows(which(tukey.fitN$med.add[,4] < 0.05, arr.ind = TRUE))
+pander(tukey.fitN$med.add,table.split.table = inf)
+
+#kable(tukey.fitN$med.add[,1:4], format = "latex", digits = 3, 
+#      caption = "ANOVA table for N-limited percent change treatments with Tukey post-hoc comparisons")
+
+```
+
+**P-limited**
+```{r perc.change-statsP}
+
+fitP = aov(perc.change ~ med.add, results[results$med.base == "PL",])
+sum.fitP = summary(fitP)
+tukey.fitP = TukeyHSD(fitP)
+
+#round(tukey.fit$med.add, digits = 3)
+set.caption("ANOVA table for PL nutrient addition")
+pander(fitP,table.split.table = inf)
+
+set.caption("Posthoc comparisons using Tukey HSD")
+#emphasize.strong.rows(which(tukey.fitP$med.add[,4] < 0.05, arr.ind = TRUE))
+pander(tukey.fitP$med.add,table.split.table = inf)
+
+#kable(tukey.fitP$med.add[,1:4], format = "latex", digits = 3, 
+#      caption = "ANOVA table for P-limited percent change treatments with Tukey post-hoc comparisons")
+
+```
+
+```{r}
+dat.perc <- read.csv("./data/supplemental/20130125_percchange_2.csv",  header = T)
+
+dataN <- dat.perc[dat.perc$med.base=="NL", ]
+dataP <- dat.perc[dat.perc$med.base=="PL", ]
+
+
+t.test(dataN[1:5, 3], dataN[6:10, 3],  alternative="greater", conf.level = 0.95, var.equal=TRUE)
+t.test(dataP[1:5, 3], dataP[6:10, 3],  alternative="less", conf.level = 0.95, var.equal=TRUE)
+
+```
+
+```{r,  echo=FALSE, eval = F}
+#Percent Change in GR 
+boxplot(dataN$perc.change~dataN$med.add, col=c("grey66", "white"), 
+cex.axis=1.5, las=1, 
+xlab = "t = 4.5459,  df = 8,  p-value = 0.0009423",  
+ylim = c(0, 100), ylab = list(cex = 1.5,  "Percent Change"))
+legend("topright", c("N-Limited", "P-limited"),  pch=c(15, 22),  col=c("grey66", "black")
+, bty='n', cex=1.5)
+
+boxplot(dataP$perc.change~dataP$med.add, 
+col=c("grey66", "white"), cex.axis=1.5, las=1, 
+xlab = "t = -3.3615,  df = 8,  p-value = 0.004955",  
+ylim = c(0, 100),  ylab = list(cex = 1.5, "Percent Change"))
+legend("topright", c("N-Limited", "P-limited"),  pch=c(15, 22),  col=c("grey66", "black")
+, bty='n', cex=1.5)
+
+```
+
+```{r, fig.width = 4, fig.height = 4, echo=FALSE, fig.cap="Fig S1: Percent change in growth"}
+# Calculate means
+perc.means <- aggregate(dat.perc[,3],list(dat.perc$med.base, dat.perc$med.add), mean)
+perc.means$plot <- c(1,2,3,4)
+
+# Calculate SEM
+# Define functions for calculations
+sem <- function(x){
+  sd(x)/sqrt(length(x))
+}
+perc.sem <- aggregate(dat.perc[,3],list(dat.perc$med.base, dat.perc$med.add), sem)
+
+#pdf(file = "./chpt-figs/fig-pub_perchange.pdf",width=5,height=5,pointsize = 12, family ="sans")
+
+
+#png(filename = "./pub-figures/fig1-perchange.png",
+#    width = 570, height = 570, units = "px", pointsize = 17,
+#    bg = "white", family = "sans", type = "cairo")
+par(mar = c(5,5,2,1) + 0.1, mfrow = c(1,1))
+perc.plot<- plot(perc.means[,3] ~ perc.means[,4], 
+     xaxt = 'n', las = 1,
+     xlim = c(0.5,4.5),ylim = c(0,100),
+     xlab = list("N-limited              P-limited", cex = 1.5, font = 2) , 
+     ylab = list("Change in Growth (%)", cex = 1.5, font = 2),
+     pch = c(21,21,22,22),col = "black", bg = c("black","white","black","white"), 
+     cex = 2, lwd = 2, cex.axis = 1.25)
+arrows(perc.means[,4],perc.means[,3]-perc.sem[,3],
+       perc.means[,4],perc.means[,3]+perc.sem[,3],
+       code = 0, lwd = 3, col = "black")
+points(perc.means[,3] ~ perc.means[,4],
+       pch = c(21,21,22,22),cex = 3, lwd = 3,
+       col = "black", bg = c("black","white","black","white"))
+box(lwd=3)
+#axis.break(1, 2.5, style = "gap")
+abline(v = 2.5, lwd = 1, lty = 1, col = "black")
+axis(1, at = c(1,2,3,4), labels = c("+N","+P","+N","+P"), cex.axis = 1.25)
+#text(1.5,10,"N-limited", cex = 1.25, font = 2)
+#text(1.5,3,"N:P = 10:1", cex = 1.15, font = 1)
+#text(3.5,10,"P-limited", cex = 1.25, font = 2)
+#text(3.5,3,"N:P = 40:1", cex = 1.15, font = 1)
+
+
+dev.off()
+```
